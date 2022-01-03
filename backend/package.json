@@ -12,5 +12,8 @@
   "bugs": {
     "url": "https://github.com/ernven/dev-academy-fullstack-project/issues"
   },
-  "homepage": "https://github.com/ernven/dev-academy-fullstack-project#readme"
+  "homepage": "https://github.com/ernven/dev-academy-fullstack-project#readme",
+  "dependencies": {
+    "express": "^4.17.2"
+  }
 }
