@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "description": "Project done as part of the application to Solita's Dev Academy.",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "start": "node -r dotenv/config index.js",
+    "start": "nodemon -r dotenv/config index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "ernven",
@@ -15,6 +16,11 @@
   "homepage": "https://github.com/ernven/dev-academy-fullstack-project#readme",
   "dependencies": {
     "dotenv": "^10.0.0",
-    "express": "^4.17.2"
+    "express": "^4.17.2",
+    "knex": "^0.95.15",
+    "pg": "^8.7.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
   }
 }
