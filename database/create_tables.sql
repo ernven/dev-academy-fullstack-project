@@ -1,9 +1,11 @@
--- This is used to create the database.
+-- This is used to create the database (Set the owner first!).
 CREATE DATABASE farmdata
     WITH 
-    OWNER = solita_db_admin
+    OWNER = user_name 
     ENCODING = 'UTF8'
     CONNECTION LIMIT = -1;
+
+-- Once in the right database, use the following statements to create the required tables.
 
 -- Adding the UUID generating extension.
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
@@ -35,6 +37,11 @@ ALTER TABLE entry
 		ON DELETE CASCADE
 		ON UPDATE CASCADE;
 
--- If using Postgres 13 (Azure doesn't support it, but Heroku does, for example),
--- UUID is supported natively and ids can be generated without the need to add the extension. The line can be:
--- id uuid NOT NULL DEFAULT gen_random_uuid (),
+/*
+If using Postgres 13, UUID is supported natively and ids can be generated without the need to add the extension.
+The line can be:
+
+id uuid NOT NULL DEFAULT gen_random_uuid (),
+
+(Azure doesn't support it, but Heroku does, for example)
+*/
