@@ -1,6 +1,6 @@
 import { Router } from 'express'
 
-import { listFarms, createFarm } from '../controllers/FarmController.js'
+import { listFarms, createFarm } from '../controllers/farm-controller.js'
 
 const router = Router()
 

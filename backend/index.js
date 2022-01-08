@@ -1,7 +1,7 @@
 import express from 'express'
 
-import farms from './routes/farms.js'
-import data from './routes/data.js'
+import farms from './routes/farms-route.js'
+import data from './routes/data-route.js'
 
 import { appConfig } from './config/config.js'
 
