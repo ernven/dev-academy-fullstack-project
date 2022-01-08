@@ -1,13 +1,13 @@
 import { Router } from 'express'
 
-import { getFarms, submitNewFarm } from '../services/FarmService.js'
+import { listFarms, createFarm } from '../controllers/FarmController.js'
 
 const router = Router()
 
 // GET the names of all the farms.
-router.get('/', getFarms)
+router.get('/', listFarms)
 
 // POST a new farm.
-router.post('/', submitNewFarm)
+router.post('/', createFarm)
 
 export default router
