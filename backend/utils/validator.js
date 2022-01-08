@@ -1,10 +1,10 @@
-export const farmNameValidator = farmName => (farmName && typeof farmName === 'string')
+export const isFarmNameValid = farmName => (farmName && typeof farmName === 'string')
 
-export const dateValidator = date => date
+export const isValidDate = date => date
 
-const typeValidator = type => type && (type === 'pH' || type === 'rainFall' || type === 'temperature')
+const isValidType = type => type && (type === 'pH' || type === 'rainFall' || type === 'temperature')
 
-const valueValidator = (type, value) => {
+const isValueValid = (type, value) => {
   try {
     const parsedValue = parseFloat(value)
     return (
@@ -17,9 +17,9 @@ const valueValidator = (type, value) => {
   }
 }
 
-export const entryValidator = entry => (
-  farmNameValidator(entry.farmName) &&
-  dateValidator(entry.date) &&
-  typeValidator(entry.type) &&
-  valueValidator(entry.value)
+export const isEntryValid = entry => (
+  isFarmNameValid(entry.farmName) &&
+  isValidDate(entry.date) &&
+  isValidType(entry.type) &&
+  isValueValid(entry.value)
 )
