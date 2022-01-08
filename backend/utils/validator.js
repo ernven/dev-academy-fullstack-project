@@ -1,5 +1,11 @@
 const isValidFarmId = farm_id => (farm_id && typeof farm_id === 'string')
 
+// NEEDS TO BE FIXED!!
+const isValidDate = date => true
+
+const isValidType = entry_type =>
+  entry_type && (entry_type === 'pH' || entry_type === 'rainFall' || entry_type === 'temperature')
+
 const isValidValue = (entry_type, read_value) => {
   try {
     const parsedValue = parseFloat(read_value)
@@ -13,12 +19,18 @@ const isValidValue = (entry_type, read_value) => {
   }
 }
 
-export const isValidFarmName = farm_name => (farm_name && typeof farm_name === 'string')
-
-export const isValidDate = date => true
-
-export const isValidType = entry_type =>
-  entry_type && (entry_type === 'pH' || entry_type === 'rainFall' || entry_type === 'temperature')
+export const isValidQuery = params => {
+  if (params.startDate) {
+    if (!isValidDate(params.startDate)) { return false }
+  }
+  if (params.endDate) {
+    if (!isValidDate(params.endDate)) { return false }
+  }
+  if (params.type) {
+    if (!isValidType(params.type)) { return false }
+  }
+  return true
+}
 
 export const isValidEntry = entry => (
   isValidFarmId(entry.farm_id) &&

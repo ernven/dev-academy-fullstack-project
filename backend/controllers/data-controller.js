@@ -1,15 +1,13 @@
 import knex from 'knex'
 
 import { dbConfig } from '../config/config.js'
-import { isValidEntry } from '../utils/validator.js'
+import { isValidEntry, isValidQuery } from '../utils/validator.js'
 
 const query = knex(dbConfig)
 
 // This -helper- function sets additional filter to the DB query.
-const setQueryFilters = (queryBuilder, req) => {
-  if (req.query) {
-    const params = req.query
-
+const setQueryFilters = (queryBuilder, params) => {
+  if (params) {
     // If present, filter by type(s).
     if (params.name) {
       // If we have multiple filters (i.e. an array), we have to use the WHERE clause with the IN operator.
@@ -31,19 +29,35 @@ const setQueryFilters = (queryBuilder, req) => {
       params.endDate ?
         queryBuilder.whereBetween('date', [params.startDate, params.endDate]) :
         queryBuilder.where('date', '>', params.startDate)
+    } else if (params.endDate) {
+      queryBuilder.where('date', '<', params.endDate)
     }
   }
 }
 
 // This method gets Farms' data from the DB (either all or filtered with request parameters).
-export const listFarmsData = (request, response) => 
-  // We build the query and use modify to handle optional parameters (using the helper function).
-  query('entry')
+export const listFarmsData = (request, response) => {
+  // We create the basic query structure.
+  let listQuery = query('entry')
+  listQuery
     .join('farm', 'entry.farm_id', 'farm.id')
     .select('entry_id', 'farm_name', 'date', 'entry_type', 'read_value')
-    .modify(queryBuilder => setQueryFilters(queryBuilder, request))
+
+  // If the request contains query parameters, values should be valid or the query returns No Content.
+  // If they are valid, we use .modify to handle optional parameters (using the helper function).
+  if (request.query) {
+    if (isValidQuery(request.query)) {
+      listQuery.modify(queryBuilder => setQueryFilters(queryBuilder, request.query))
+    } else {
+      return response.status(204).end()
+    }
+  }
+  
+  // We use promises to deal with our query returns.
+  listQuery
     .then(r => r.length !== 0 ? response.status(200).json(r) : response.status(204).end())
     .catch(err => response.status(500).json({error: err}))
+}
 
 // This method is used for inserting new farms' data into the database.
 export const createFarmsData = (request, response) => {
