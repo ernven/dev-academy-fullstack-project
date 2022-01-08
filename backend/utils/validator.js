@@ -1,25 +1,28 @@
-export const isFarmNameValid = farmName => (farmName && typeof farmName === 'string')
+const isValidFarmId = farm_id => (farm_id && typeof farm_id === 'string')
 
-export const isValidDate = date => date
-
-const isValidType = type => type && (type === 'pH' || type === 'rainFall' || type === 'temperature')
-
-const isValueValid = (type, value) => {
+const isValidValue = (entry_type, read_value) => {
   try {
-    const parsedValue = parseFloat(value)
+    const parsedValue = parseFloat(read_value)
     return (
-      type === 'pH' && (parsedValue >= 0.0 && parsedValue <= 14.0) ||
-      type === 'rainFall' && (parsedValue >= 0.0 && parsedValue <= 500.0) ||
-      type === 'temperature' && (parsedValue >= -50.0 && parsedValue <= 100.0)
+      entry_type === 'pH' && (parsedValue >= 0.0 && parsedValue <= 14.0) ||
+      entry_type === 'rainFall' && (parsedValue >= 0.0 && parsedValue <= 500.0) ||
+      entry_type === 'temperature' && (parsedValue >= -50.0 && parsedValue <= 100.0)
     )
   } catch {
     return false
   }
 }
 
-export const isEntryValid = entry => (
-  isFarmNameValid(entry.farmName) &&
+export const isValidFarmName = farm_name => (farm_name && typeof farm_name === 'string')
+
+export const isValidDate = date => true
+
+export const isValidType = entry_type =>
+  entry_type && (entry_type === 'pH' || entry_type === 'rainFall' || entry_type === 'temperature')
+
+export const isValidEntry = entry => (
+  isValidFarmId(entry.farm_id) &&
   isValidDate(entry.date) &&
-  isValidType(entry.type) &&
-  isValueValid(entry.value)
+  isValidType(entry.entry_type) &&
+  isValidValue(entry.entry_type, entry.read_value)
 )

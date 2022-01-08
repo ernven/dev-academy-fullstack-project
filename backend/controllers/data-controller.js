@@ -1,6 +1,7 @@
 import knex from 'knex'
 
 import { dbConfig } from '../config/config.js'
+import { isValidEntry } from '../utils/validator.js'
 
 const query = knex(dbConfig)
 
@@ -44,7 +45,25 @@ export const listFarmsData = (request, response) =>
     .then(r => r.length !== 0 ? response.status(200).json(r) : response.status(204).end())
     .catch(err => response.status(500).json({error: err}))
 
-// This method is used for inserting new farms data into the database.
-// Since the data is coming from the farm, all entries should be from the same farm, which means we can check it only once.
-export const createFarmsData = (request, _) =>
-  console.log(request)
+// This method is used for inserting new farms' data into the database.
+export const createFarmsData = (request, response) => {
+  let body = []
+
+  // The request body is manually parsed (not using libraries)
+  request
+    .on('data', chunk => body.push(chunk))
+    .on('end', () => {
+      try {
+        const parsedBody = JSON.parse(Buffer.concat(body))
+
+        // Iterating through the request body and validating the items using our validator.
+        const validEntries = parsedBody.filter(entry => isValidEntry(entry))
+
+        query('entry').insert(validEntries)
+          .then(id => response.status(201).json({row: id}))
+          .catch(err => response.status(500).json({error: err}))
+      } catch {
+        return response.status(400).send("There was a problem with your request.")
+      }
+  })
+}
