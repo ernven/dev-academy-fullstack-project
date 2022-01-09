@@ -5,8 +5,6 @@ import Table from './Table'
 // This is an implementation of the table from Table.js with our data.
 function RoomList ({ data }) {
 
-  const formatDate = date => (new Date(date)).toLocaleString()
-
   // We memoize the data to be passed.
   const tableData = useMemo(() => data, [data])
 
