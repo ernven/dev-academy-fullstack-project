@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-import DataTable from './components/DataTable'
+import DataTable from './components/FilteredDataTable/DataTable'
 
 function App() {
   const [farms, setFarms] = useState([])
