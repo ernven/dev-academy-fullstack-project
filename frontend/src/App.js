@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 
-import DataTable from './components/FilteredDataTable/DataTable'
+//import DataTable from './components/FilteredDataTable/DataTable'
+import Graph from './components/Graphs/Chart'
 
 function App() {
   const [farms, setFarms] = useState([])
@@ -22,7 +23,7 @@ function App() {
 
   return (
     <div>
-      <DataTable farms={farms} data={data} />
+      <Graph farms={farms} data={data} />
     </div>
   )
 }
