@@ -1,7 +1,15 @@
 import { useState, useEffect } from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
-//import DataTable from './components/FilteredDataTable/DataTable'
+import HeaderDrawer from './components/HeaderDrawer/HeaderDrawer'
+import FilteredTable from './components/FilteredTable/Table/DataTable'
 import Graph from './components/Graphs/Chart'
+
+import './App.css'
+
+// Any non matching routes will show a 404 error.
+const NoMatch = () => <h2>404 - Not found</h2>
+const Main = () => <h2>Welcome to the Farms App!</h2>
 
 function App() {
   const [farms, setFarms] = useState([])
@@ -22,8 +30,18 @@ function App() {
   , [])
 
   return (
-    <div>
-      <Graph farms={farms} data={data} />
+    <div style={{ display: 'flex' }}>
+      <BrowserRouter>
+        <HeaderDrawer />
+        <div id='route-elements'>
+          <Routes>
+            <Route path='/' element={Main()} />
+            <Route path='table' element={<FilteredTable farms={farms} data={data} />} />
+            <Route path='graph' element={<Graph farms={farms} data={data} />} />
+            <Route path='*' element={NoMatch()} />
+          </Routes>
+        </div>
+    </BrowserRouter>
     </div>
   )
 }

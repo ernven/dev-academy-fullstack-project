@@ -1,0 +1,8 @@
+.root {
+  display: flex;
+}
+
+#route-elements {
+  margin: auto;
+  padding: 8em;
+}
