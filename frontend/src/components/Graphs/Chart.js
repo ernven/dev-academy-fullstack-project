@@ -1,6 +1,17 @@
+import { useState, useEffect } from 'react'
 import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Line } from 'recharts'
 
-function Chart({ data }) {
+import useFetch from '../../utils/useFetch'
+
+function Chart({ farms }) {
+  const [data, setData] = useState([])
+
+  const response = useFetch('data')
+
+  useEffect(() => {
+    if (response.data) { setData(response.data) }
+  }, [response.data])
+
   const prepareData = data.map(i => { return {...i, date: (new Date(i.date)).toLocaleDateString()} })
 
   // This could be used to build lines in the future.

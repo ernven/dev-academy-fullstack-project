@@ -5,7 +5,7 @@ import { Table as MaterialTable, TableBody, TableHead, TableRow, TableCell } fro
 const defaultPropGetter = () => ({})
 
 // We pass columns and data to build the table with as props.
-const Table = ({ columns, data, getCellProps = defaultPropGetter }) => {
+export default function Table({ columns, data, getCellProps = defaultPropGetter }) {
   const {
     getTableProps,
     getTableBodyProps,
@@ -65,5 +65,3 @@ const Table = ({ columns, data, getCellProps = defaultPropGetter }) => {
     </div>
   )
 }
-
-export default Table

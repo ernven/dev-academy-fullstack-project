@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import Table from './Table'
 
 // This is an implementation of the table from Table.js with our data.
-function RoomList ({ data }) {
+export default function DataTable({ data }) {
 
   // We memoize the data to be passed.
   const tableData = useMemo(() => data, [data])
@@ -31,5 +31,3 @@ function RoomList ({ data }) {
   // Using react-table v7 (component Table.js)
   return (<Table columns={columns} data={tableData} />)
 }
-
-export default RoomList

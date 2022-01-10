@@ -1,12 +1,21 @@
-import DataTable from './components/FilteredDataTable/Table/DataTable'
+import { useState, useEffect } from 'react'
+
+import useFetch from '../../utils/useFetch'
+import DataTable from './Table/DataTable'
 import Filters from './Filters'
 
-import './FilteredTable.css'
+export default function FilteredTable({ farms }) {
+  const [data, setData] = useState([])
 
-export default function FilteredTable({ farms, data }) {
+  const response = useFetch('/data')
+
+  useEffect(() => {
+    if (response.data) { setData(response.data) }
+  }, [response.data])
+
   return (
     <div>
-      <Filters />
+      <Filters farms={farms} />
       <DataTable data={data} />
     </div>
   )
