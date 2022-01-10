@@ -1,4 +1,5 @@
-import { Toolbar, IconButton, Typography } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
+import { Toolbar, IconButton, Typography, Button } from '@mui/material'
 import MuiAppBar from '@mui/material/AppBar'
 import { styled } from '@mui/material/styles'
 
@@ -25,6 +26,8 @@ const AppBar = styled(MuiAppBar, {
 }))
 
 export default function Header({ open, handleDrawerOpen }) {
+  const navigate = useNavigate()
+
   return (
     <AppBar position='fixed' color='default' open={open}>
       <Toolbar>
@@ -37,9 +40,16 @@ export default function Header({ open, handleDrawerOpen }) {
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant='h5' color='green' noWrap component='div'>
-          Farms App
-        </Typography>
+        <Button
+          disableRipple={true}
+          aria-label='navigate to home'
+          onClick={() => navigate('/')}
+          sx={{'&:hover': {backgroundColor: 'inherit'}}}
+        >
+          <Typography variant='h5' color='green' noWrap component='div' >
+            Farms App
+          </Typography>
+        </Button>
       </Toolbar>
     </AppBar>
   )

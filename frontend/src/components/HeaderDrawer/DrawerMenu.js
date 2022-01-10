@@ -89,7 +89,7 @@ export default function DrawerMenu({ open, handleDrawerClose }) {
 
     <List>
 
-        <ListItem button key='Table View' onClick={(e) => navigate('/table')}>
+        <ListItem button key='Table View' onClick={() => navigate('/table')}>
           <ListItemIcon>
             <TableRowsIcon />
           </ListItemIcon>
