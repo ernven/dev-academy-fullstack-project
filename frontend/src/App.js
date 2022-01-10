@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { Typography } from '@mui/material'
 
 import HeaderDrawer from './components/HeaderDrawer/HeaderDrawer'
 import FilteredTable from './components/FilteredTable/Table/DataTable'
@@ -7,9 +8,10 @@ import Graph from './components/Graphs/Chart'
 
 import './App.css'
 
+const Main = () => <Typography variant='h3' color='green'>Welcome to the Farms App!</Typography>
+
 // Any non matching routes will show a 404 error.
-const NoMatch = () => <h2>404 - Not found</h2>
-const Main = () => <h2>Welcome to the Farms App!</h2>
+const NoMatch = () => <Typography variant='h4'>404 - Not found</Typography>
 
 function App() {
   const [farms, setFarms] = useState([])
