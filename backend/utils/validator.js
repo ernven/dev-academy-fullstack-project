@@ -1,7 +1,9 @@
-const isValidFarmId = farm_id => (farm_id && typeof farm_id === 'string')
+function isValidFarmId(farm_id) {
+  return (farm_id && typeof farm_id === 'string')
+}
 
 // The two following -helper- functions are just for checking date values.
-const areValidDateValues = (year, month, day) => {
+function areValidDateValues(year, month, day) {
   if (month < 1 || month > 12 || day < 1 || day > 31) { return false }
   if ([4,6,9,11].includes(month) && day > 30) { return false }
   if (month === 2) {
@@ -15,11 +17,12 @@ const areValidDateValues = (year, month, day) => {
   return true
 }
 
-const areValidTimeValues = (hour, minutes, seconds) =>
-  (hour >= 0 && hour < 24) && (minutes > 0 && minutes < 60) && (seconds > 0 && seconds < 60 )
+function areValidTimeValues(hour, minutes, seconds) {
+  return (hour >= 0 && hour < 24) && (minutes > 0 && minutes < 60) && (seconds > 0 && seconds < 60 )
+}
 
 // This functions, using the previous two, checks the date format plus values.
-const isValidDate = date => {
+function isValidDate(date) {
 
   const testRegex = /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}\.?\d{0,3}(Z|([+-]\d{2}:\d{2})?))?$/
 
@@ -50,10 +53,17 @@ const isValidDate = date => {
   return true
 }
 
-const isValidType = entry_type =>
-  entry_type && (entry_type === 'pH' || entry_type === 'rainFall' || entry_type === 'temperature')
+export function isValidMonth(month) {
+  if (!month.match(/^\d{1,2}$/)) { return false }
+  const parsedMonth = parseInt(month)
+  return (parsedMonth > 0 && parsedMonth < 13)
+}
 
-const isValidValue = (entry_type, read_value) => {
+function isValidType(entry_type) {
+  return (entry_type && (entry_type === 'pH' || entry_type === 'rainFall' || entry_type === 'temperature'))
+}
+
+function isValidValue(entry_type, read_value) {
   try {
     const parsedValue = parseFloat(read_value)
     return (
@@ -66,7 +76,7 @@ const isValidValue = (entry_type, read_value) => {
   }
 }
 
-export const isValidQuery = params => {
+export function isValidQuery(params) {
   if (params.startDate) {
     if (!isValidDate(params.startDate)) { return false }
   }
@@ -74,14 +84,22 @@ export const isValidQuery = params => {
     if (!isValidDate(params.endDate)) { return false }
   }
   if (params.type) {
-    if (!isValidType(params.type)) { return false }
+    if (Object.prototype.toString.call(params.type) === '[object Array]') {
+      params.type.forEach(t => {  
+        if (!isValidType(t)) { return false }
+      })
+    } else {
+      if (!isValidType(params.type)) { return false }
+    }
   }
   return true
 }
 
-export const isValidEntry = entry => (
-  isValidFarmId(entry.farm_id) &&
-  isValidDate(entry.date) &&
-  isValidType(entry.entry_type) &&
-  isValidValue(entry.entry_type, entry.read_value)
-)
+export function isValidEntry(entry) {
+  return (
+    isValidFarmId(entry.farm_id) &&
+    isValidDate(entry.date) &&
+    isValidType(entry.entry_type) &&
+    isValidValue(entry.entry_type, entry.read_value)
+  )
+}
