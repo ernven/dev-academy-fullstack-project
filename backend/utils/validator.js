@@ -1,7 +1,3 @@
-function isValidFarmId(farm_id) {
-  return (farm_id && typeof farm_id === 'string')
-}
-
 // The two following -helper- functions are just for checking date values.
 function areValidDateValues(year, month, day) {
   if (month < 1 || month > 12 || day < 1 || day > 31) { return false }
@@ -53,6 +49,7 @@ function isValidDate(date) {
   return true
 }
 
+// This function checks if an input month, in MM format, is valid.
 export function isValidMonth(month) {
   if (!month.match(/^\d{1,2}$/)) { return false }
   const parsedMonth = parseInt(month)
@@ -76,6 +73,7 @@ function isValidValue(entry_type, read_value) {
   }
 }
 
+// Function used to validate request parameters used for filtering.
 export function isValidQuery(params) {
   if (params.startDate) {
     if (!isValidDate(params.startDate)) { return false }
@@ -95,9 +93,10 @@ export function isValidQuery(params) {
   return true
 }
 
+// We check the validity of an entry before inserting into the db.
 export function isValidEntry(entry) {
   return (
-    isValidFarmId(entry.farm_id) &&
+    // Farm Ids are generated in and fetched only from the db, hence no need to validate.
     isValidDate(entry.date) &&
     isValidType(entry.entry_type) &&
     isValidValue(entry.entry_type, entry.read_value)

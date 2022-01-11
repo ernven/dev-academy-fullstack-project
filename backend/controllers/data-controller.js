@@ -37,14 +37,14 @@ function setQueryFilters(queryBuilder, params) {
 }
 
 // This helper function inserts the data into the db.
-function insertData(data) {
+function insertData(data, response) {
   query('entry').insert(data)
     .then(r => response.status(201).json({command: r.command, status: 'success'}))
     .catch(err => response.status(500).json({error: err}))
 }
 
-// This helper function handles the parsing of JSON from the request body and inserts the data into the db.
-function insertFromText(request, response) {
+// This helper function handles the parsing of JSON from the request body. Then sends it for insert into the db.
+function prepareDataFromText(request, response) {
   const body = []
 
   // If the request body is in text/JSON form, it is manually parsed (not using libraries).
@@ -58,21 +58,22 @@ function insertFromText(request, response) {
         const validEntries = parsedBody.filter(entry => isValidEntry(entry))
 
         // Finally, we insert the entries into the db.
-        insertData(validEntries)
+        insertData(validEntries, response)
       } catch {
         return response.status(400).send("There was a problem with your request.")
       }
   })
 }
 
-function insertFromCsv(request, response) {
+// This helper function handles the parsing of the csv file and formatting of the data. Then sends it for insert.
+function prepareDataFromCsv(request, response) {
 
   // Busboy is used to parse multipart content.
-  const bodyParser = busboy({ headers: request.headers })
+  const bb = busboy({ headers: request.headers })
   let body
   let rows = []
 
-  bodyParser
+  bb
     .on('file', (_name, file, _info) => {
       file
         .on('data', data => body = data)
@@ -82,7 +83,8 @@ function insertFromCsv(request, response) {
       // Check if there's at least one data entry (0 being the header).
       if (!rows[1]) { response.status(204).end() }
           
-      // We need the farm ID for inserting. Since data comes from a farm, should be the same for all (we can validate that later).
+      // We need the farm ID for inserting.
+      // Since data comes from a farm, should be the same for all (we can validate that later).
       const farmName = rows[1].split(',')[0]
       
       query('farm').select('id').where('farm_name', farmName)
@@ -98,18 +100,18 @@ function insertFromCsv(request, response) {
             const fields = r.split(',')
 
             // Double check the farm name is the same!
-            const entry = (fields[0] === farmName) ? 
-              { farm_id: found[0].id, date: fields[1], entry_type: fields[2], read_value: fields[3] } :
-              { farm_id: fields[0], date: fields[1], entry_type: fields[2], read_value: fields[3] }
+            if (fields[0] === farmName) {
+              const entry = { farm_id: found[0].id, date: fields[1], entry_type: fields[2], read_value: fields[3] } 
 
-            if (isValidEntry(entry)) { validEntries.push(entry) }
+              if (isValidEntry(entry)) { validEntries.push(entry) }
+            }
           })
 
           // Finally, we insert the entries into the db.
-          insertData(validEntries)
+          insertData(validEntries, response)
         })
     })
-  request.pipe(bodyParser)
+  request.pipe(bb)
 }
 
 // This function gets all Farms' data from the DB.
@@ -248,9 +250,9 @@ export function saveData(request, response) {
   const contentType = request.headers['content-type']
 
   if (contentType === 'text/plain') {
-    insertFromText(request, response)
+    prepareDataFromText(request, response)
   } else if (contentType.includes('multipart/form-data')) {
-    insertFromCsv(request, response)
+    prepareDataFromCsv(request, response)
   } else {
     return response.status(400).send("There was a problem with your request.")
   }
