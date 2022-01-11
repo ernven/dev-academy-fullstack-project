@@ -6,6 +6,8 @@ import useFetch from './utils/useFetch'
 import HeaderDrawer from './components/HeaderDrawer/HeaderDrawer'
 import FilteredTable from './components/FilteredTable/FilteredTable'
 import Graph from './components/Graphs/Chart'
+import Admin from './components/Admin/Admin'
+import Dashboard from './components/Dashboard/Dashboard'
 
 import './App.css'
 
@@ -30,8 +32,10 @@ function App() {
         <div id='route-elements'>
           <Routes>
             <Route path='/' element={Main()} />
+            <Route path='admin' element={<Admin />} />
             <Route path='table' element={<FilteredTable farms={farms} />} />
             <Route path='graph' element={<Graph farms={farms} />} />
+            <Route path='dashboard' element={<Dashboard farms={farms} />} />
             <Route path='*' element={NoMatch()} />
           </Routes>
         </div>
