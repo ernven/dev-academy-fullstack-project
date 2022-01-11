@@ -1,6 +1,9 @@
 import { Router } from 'express'
 
-import { listData, listDataWithFilters, listDataByPeriod, createFarmsData } from '../controllers/data-controller.js'
+import {
+  listData, listDataWithFilters, listDataByPeriod, listAverages,
+  listMinMaxValues, listDataForCharts, saveData
+} from '../controllers/data-controller.js'
 
 const router = Router()
 
@@ -11,11 +14,17 @@ router.get('/', listData)
 router.get('/filter', listDataWithFilters)
 
 // GET data from input year and/or month.
-router.get('/year/:year/:month?', listDataByPeriod)
+router.get('/by-period/:year/:month?', listDataByPeriod)
 
-// GET data from input year and month.
+// GET calculated data: averages, max values.
+router.get('/averages', listAverages)
+router.get('/extremes', listMinMaxValues)
 
-// POST new farm data from csv.
-router.post('/', createFarmsData)
+// GET data formatted to draw charts with.
+router.get('/chart-data', listDataForCharts)
+
+// POST new farm data, either as JSON object(s) or from a CSV file.
+router.post('/', saveData)
+
 
 export default router
