@@ -249,10 +249,10 @@ export function listDataForCharts(request, response) {
 export function saveData(request, response) {
   const contentType = request.headers['content-type']
 
-  if (contentType === 'text/plain') {
-    prepareDataFromText(request, response)
-  } else if (contentType.includes('multipart/form-data')) {
+  if (contentType.includes('multipart/form-data')) {
     prepareDataFromCsv(request, response)
+  } else if (contentType === 'application/json' || contentType === 'text/plain') {
+    prepareDataFromText(request, response)
   } else {
     return response.status(400).send("There was a problem with your request.")
   }
