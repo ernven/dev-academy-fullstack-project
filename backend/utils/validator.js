@@ -1,3 +1,8 @@
+// Validates that Farm name isn't falsy nor empty/blank.
+export function isValidFarmName(name) {
+  return (name && !(/^\s*$/).test(name))
+}
+
 // The two following -helper- functions are just for checking date values.
 function areValidDateValues(year, month, day) {
   if (month < 1 || month > 12 || day < 1 || day > 31) { return false }
@@ -23,7 +28,7 @@ function isValidDate(date) {
   const testRegex = /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}\.?\d{0,3}(Z|([+-]\d{2}:\d{2})?))?$/
 
   // Checking if the input matches the expected format.
-  if (!date.match(testRegex)) { return false }
+  if (!testRegex.test(date)) { return false }
 
   const inputDate = new Date(date)
   const now = new Date()
@@ -51,7 +56,7 @@ function isValidDate(date) {
 
 // This function checks if an input month, in MM format, is valid.
 export function isValidMonth(month) {
-  if (!month.match(/^\d{1,2}$/)) { return false }
+  if (!(/^\d{1,2}$/).test(month)) { return false }
   const parsedMonth = parseInt(month)
   return (parsedMonth > 0 && parsedMonth < 13)
 }

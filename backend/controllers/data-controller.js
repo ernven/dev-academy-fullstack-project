@@ -81,7 +81,7 @@ function prepareDataFromCsv(request, response) {
     })
     .on('finish', () => {
       // Check if there's at least one data entry (0 being the header).
-      if (!rows[1]) { response.status(204).end() }
+      if (!rows[1]) { return response.status(204).end() }
           
       // We need the farm ID for inserting.
       // Since data comes from a farm, should be the same for all (we can validate that later).
@@ -91,7 +91,9 @@ function prepareDataFromCsv(request, response) {
         .then(found => {
           // Check if farm exists. If not, no inserting is done (wouldn't work anyway).
           // NOTE: We could also add the farm now. This depends on how the app is intended to work.
-          if (!found[0].id) { response.status(204).end() }
+          if (!found[0]) {
+            return response.status(400).json({error: {detail: 'Farm must be in the database first. Nothing was added.'}})
+          }
 
           let validEntries = []
 

@@ -1,6 +1,7 @@
 import knex from 'knex'
 
 import { dbConfig } from '../config/config.js'
+import { isValidFarmName } from '../utils/validator.js'
 
 const query = knex(dbConfig)
 
@@ -14,19 +15,23 @@ export function listFarms(_, response) {
 
 // This method is used for inserting a new farm into the database.
 export function createFarm(request, response) {
-  let parsedBody
+  let body
 
   // The request body is manually parsed (not using libraries)
   request
-    .on('data', chunk => parsedBody = JSON.parse(chunk))
+    .on('data', chunk => body = chunk)
     .on('end', () => {
       try {
-        // If errors are found, no inserting is done.
-        query('farm').insert(parsedBody)
-          .then(r => response.status(201).json({command: r.command, status: 'success'}))
-          .catch(err => response.status(500).json({error: err}))
+        const entry = JSON.parse(body)
+
+        // If not valid, or errors are found, no inserting is done.
+        isValidFarmName(entry.farm_name)
+          ? query('farm').insert(entry)
+            .then(r => response.status(201).json({command: r.command, status: 'success'}))
+            .catch(err => response.status(500).json({error: err}))
+          : response.status(400).send('Error: Invalid input name (' + entry.farm_name + ').')
       } catch {
-        return response.status(400).send("There was a problem with your request.")
+        return response.status(400).send('There was a problem with your request.')
       }
   })
 }
