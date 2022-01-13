@@ -4,6 +4,8 @@ import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-mod
 
 import '@ag-grid-community/core/dist/styles/ag-grid.css'
 import '@ag-grid-community/core/dist/styles/ag-theme-material.css'
+// Custom css to center the headers.
+import './DataGrid.css'
 
 export default function DataGrid() {
   const [farmsData, setFarmsData] = useState([])
@@ -36,12 +38,13 @@ export default function DataGrid() {
 
   const defaultColDef = useMemo(() => ({
     sortable: true,
+    cellStyle: {textAlign: 'center'}
   }), [])
 
   const modules = useMemo(() => [ClientSideRowModelModule], [])
 
   return (
-  <div style={{height: '80vh', width: '60vw'}}>
+  <div style={{height: '80vh', width: '78vw'}}>
     <AgGridReact
       className='ag-theme-material'
       animateRows='true'
