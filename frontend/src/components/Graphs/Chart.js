@@ -1,63 +1,27 @@
-import { useState, useEffect } from 'react'
 import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Line } from 'recharts'
 
-
-function Chart({ farms }) {
-  const [chartData, setChartData] = useState([])
-
-  let url = ''
-
-  useEffect(() => {
-    if (url) {
-      fetch(url)
-        .then(res => res.ok ? res.json() : console.log("Error fetching graph data."))
-        .then(data => {
-          const dataFormatted = data.map(i => { return {...i, date: (new Date(i.date)).toLocaleDateString()} })
-          setChartData(dataFormatted)
-        })
-        .catch(err => console.log(err))
-    }
-  }, [url])
-
+export default function Chart({ farms, chartData }) {
 
   // This could be used to build lines in the future.
-  const buildLine = type => (
-    <Line
-      type='monotone'
-      name={type}
-      dataKey={i => i.entry_type === type ? i.read_value : null}
-      stroke='#1810d8' 
-    />
-  )
+  const buildLines = farms => 
+    farms.map(farm => 
+      <Line
+        key={farm.farm_name}
+        type='monotone'
+        name={farm.farm_name}
+        dataKey={farm.farm_name}
+        stroke={'#' + (Math.floor(100000 + Math.random() * 900000))}
+      />
+    )
 
   return (
-    <LineChart width={800} height={400} data={chartData}
-      margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+    <LineChart width={900} height={450} data={chartData}>
       <CartesianGrid strokeDasharray='3 3' />
-      <XAxis dataKey='date' />
-      <YAxis />
+      <XAxis padding={{ left: 10, right: 10 }} dataKey='date' />
+      <YAxis padding={{ top: 140, bottom: 30 }} />
       <Tooltip />
       <Legend />
-      <Line
-        type='monotone'
-        name='pH'
-        dataKey={i => i.entry_type === 'ph' ? i.read_value : null}
-        stroke='#f9141e'
-      />
-      <Line
-        type='monotone'
-        name='Rainfall'
-        dataKey={i => i.entry_type === 'rainFall' ? i.read_value : null}
-        stroke='#586618'
-      />
-      <Line
-        type='monotone'
-        name='Temperature'
-        dataKey={i => i.entry_type === 'temperature' ? i.read_value : null}
-        stroke='#1810d8' 
-      />
+      {buildLines(farms)}
     </LineChart>
   )
 }
-
-export default Chart
