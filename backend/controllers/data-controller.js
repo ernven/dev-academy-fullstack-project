@@ -105,12 +105,14 @@ function prepareDataFromCsv(request, response) {
             if (fields[0] === farmName) {
               const entry = { farm_id: found[0].id, date: fields[1], entry_type: fields[2], read_value: fields[3] } 
 
-              if (isValidEntry(entry)) { validEntries.push(entry) }
+              if (isValidEntry(entry)) { validEntries.push(entry) } else { console.log(entry + ' is not valid.')}
             }
           })
 
+          console.log(validEntries)
+
           // Finally, we insert the entries into the db.
-          insertData(validEntries, response)
+          //insertData(validEntries, response)
         })
     })
   request.pipe(bb)
@@ -178,7 +180,7 @@ export function listDataWithFilters(request, response) {
 }
 
 // This function returns averages of each type, for a certain farm.
-export function listAverages(_, response) {
+export function listAverages(request, response) {
   let listQuery = query('entry')
   listQuery
     .join('farm', 'entry.farm_id', 'farm.id')
