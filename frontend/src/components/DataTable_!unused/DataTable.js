@@ -5,6 +5,9 @@ import useFetch from '../../utils/useFetch'
 import Table from './Table/Table'
 
 // This is an implementation of the table from Table.js with our data.
+// It does not perform too well with large datasets, so it might not be the best choice if we intend to show large amounts of data.
+// It can stay here for now, in case it might be useful in the future.
+// To use it, install first react-table with 'npm install react-table'
 export default function DataTable() {
   const [farmsData, setFarmsData] = useState([])
 
