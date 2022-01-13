@@ -23,7 +23,7 @@ export default function DataInput() {
         body: data
       }
 
-      // We don't use the fetch hook here since we're firing the action with a user click.
+      // We send the POST request to the backend.
       fetch('data', settings)
         .then(res => res.ok ? res.json() : res.json().then(r => setStatus({ active: 2, text: r.error.detail })))
         .then(data => data ? setStatus({ active: 1, text: 'Data was added to the database!' }) : null)

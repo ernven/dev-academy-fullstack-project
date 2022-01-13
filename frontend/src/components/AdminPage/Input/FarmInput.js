@@ -23,7 +23,7 @@ export default function FarmInput() {
         body: `{"farm_name":"` + farm + `"}`,
       }
 
-      // We don't use the fetch hook here since we're firing the action with a user click.
+      // We send the POST request to the backend.
       fetch('farms', settings)
         .then(res =>
           res.ok

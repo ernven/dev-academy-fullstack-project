@@ -1,18 +1,22 @@
-import { useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { AgGridReact } from '@ag-grid-community/react'
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model'
-
-import useFetch from '../../utils/useFetch'
 
 import '@ag-grid-community/core/dist/styles/ag-grid.css'
 import '@ag-grid-community/core/dist/styles/ag-theme-material.css'
 
 export default function DataGrid() {
+  const [farmsData, setFarmsData] = useState([])
 
-  const { data } = useFetch('data')
+  useEffect(() => 
+    fetch('data')
+      .then(res => res.ok ? res.json() : console.log('Error loading data.'))
+      .then(data => setFarmsData(data))
+      .catch(err => console.log(err))
+  , [])
 
   // Defining the data and columns, memoized to prevent unnecessary updates.
-  const farmsData = useMemo(() => data ? data : [], [data])
+  const tableData = useMemo(() => farmsData, [farmsData])
 
   const columnDefs = useMemo(() => [
     {
@@ -44,7 +48,7 @@ export default function DataGrid() {
       modules={modules}
       columnDefs={columnDefs}
       defaultColDef={defaultColDef}
-      rowData={farmsData}>
+      rowData={tableData}>
     </AgGridReact>
   </div>
   )

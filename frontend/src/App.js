@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Typography } from '@mui/material'
 
-import useFetch from './utils/useFetch'
 import HeaderDrawer from './components/HeaderDrawer/HeaderDrawer'
 import DataGrid from './components/DataGrid/DataGrid'
 import Graph from './components/Graphs/Chart'
@@ -19,11 +18,12 @@ const NoMatch = () => <Typography variant='h4'>404 - Not found</Typography>
 function App() {
   const [farms, setFarms] = useState([])
 
-  const response = useFetch('farms')
-
-  useEffect(() => {
-    if (response.data) { setFarms(response.data) }
-  }, [response.data])
+  useEffect(() => 
+    fetch('farms')
+      .then(res => res.ok ? res.json() : console.log('Error loading farms.'))
+      .then(data => setFarms(data))
+      .catch(err => console.log(err))
+  , [])
 
   return (
     <div style={{ display: 'flex' }}>

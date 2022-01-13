@@ -1,18 +1,24 @@
 import { useState, useEffect } from 'react'
 import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Line } from 'recharts'
 
-import useFetch from '../../utils/useFetch'
 
 function Chart({ farms }) {
-  const [data, setData] = useState([])
+  const [chartData, setChartData] = useState([])
 
-  const response = useFetch('data')
+  let url = ''
 
   useEffect(() => {
-    if (response.data) { setData(response.data) }
-  }, [response.data])
+    fetch(url)
+      .then(res => res.ok ? res.json() : console.log("Error fetching graph data."))
+      .then(data => {
+        const dataFormatted = data.map(i => { return {...i, date: (new Date(i.date)).toLocaleDateString()} })
+        setChartData(dataFormatted)
+      })
+      .catch(err => console.log(err))
 
-  const prepareData = data.map(i => { return {...i, date: (new Date(i.date)).toLocaleDateString()} })
+
+  }, [url])
+
 
   // This could be used to build lines in the future.
   const buildLine = type => (
@@ -25,7 +31,7 @@ function Chart({ farms }) {
   )
 
   return (
-    <LineChart width={800} height={400} data={prepareData}
+    <LineChart width={800} height={400} data={chartData}
       margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
       <CartesianGrid strokeDasharray='3 3' />
       <XAxis dataKey='date' />
