@@ -1,0 +1,13 @@
+#container {
+  margin-left: 10vw;
+}
+
+.dropdown-menu {
+  width: 50vw !important;
+  margin-left: 3vw !important;
+}
+
+#cards-container {
+  display: flex;
+  padding-top: 5%;
+}

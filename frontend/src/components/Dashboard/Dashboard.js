@@ -4,6 +4,8 @@ import { FormControl, InputLabel, Select, MenuItem, Typography } from '@mui/mate
 
 import DashboardCard from './DashboardCard'
 
+import './Dashboard.css'
+
 export default function Dashboard({ farms }) {
   const [dashboardData, setDashboardData] = useState([])
   const [selected, setSelected] = useState('')
@@ -37,8 +39,8 @@ export default function Dashboard({ farms }) {
     dashboardData.map(e => (<DashboardCard key={Object.keys(e)[1]} data={e} />))
 
   return (
-    <div>
-      <FormControl sx={{width: '50vw'}}>
+    <div id='container'>
+      <FormControl className='dropdown-menu'>
         <InputLabel id='farms-label'>Farms</InputLabel>
         <Select
           labelId='farms-label'
@@ -50,8 +52,9 @@ export default function Dashboard({ farms }) {
         </Select>
       </FormControl>
 
-      <div style={{display: 'flex', paddingTop: '5%'}} >
-        {selected ? buildCards() : <Typography variant='subtitle1'>Please select a farm to show data.</Typography>}
+      <div id='cards-container' >
+        {selected ? buildCards() :
+          <Typography className='dropdown-menu' variant='subtitle1'>Please select a farm to show data.</Typography>}
       </div>
           
     </div>

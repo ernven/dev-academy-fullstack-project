@@ -2,6 +2,14 @@
   padding: 25% 0 0 0;
 }
 
+#file-input {
+  margin-left: 25%;
+}
+
+.file-status-msg {
+  margin-left: 46% !important;
+}
+
 .submit-button {
   margin: 3% 0 0 40% !important;
 }
