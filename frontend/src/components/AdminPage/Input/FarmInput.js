@@ -39,7 +39,7 @@ export default function FarmInput() {
             ? setStatus({ active: 1, text: farm + ' was added to the database!' })
             : null
         )
-        .catch(err => console.log(err))
+        .catch(err => setStatus({ active: 2, text: err }))
 
     } else {
       // If data is invalid, show an error.

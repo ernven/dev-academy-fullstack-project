@@ -4,7 +4,7 @@ import { Typography } from '@mui/material'
 
 import useFetch from './utils/useFetch'
 import HeaderDrawer from './components/HeaderDrawer/HeaderDrawer'
-import FilteredTable from './components/FilteredTable/FilteredTable'
+import DataTable from './components/DataTable/DataTable'
 import Graph from './components/Graphs/Chart'
 import AdminPage from './components/AdminPage/AdminPage'
 import Dashboard from './components/Dashboard/Dashboard'
@@ -33,7 +33,7 @@ function App() {
           <Routes>
             <Route path='/' element={Main()} />
             <Route path='admin' element={<AdminPage />} />
-            <Route path='table' element={<FilteredTable farms={farms} />} />
+            <Route path='table' element={<DataTable />} />
             <Route path='graph' element={<Graph farms={farms} />} />
             <Route path='dashboard' element={<Dashboard farms={farms} />} />
             <Route path='*' element={NoMatch()} />

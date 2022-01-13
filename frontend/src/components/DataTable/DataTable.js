@@ -1,12 +1,21 @@
-import { useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 
-import Table from './Table'
+import useFetch from '../../utils/useFetch'
+
+import Table from './Table/Table'
 
 // This is an implementation of the table from Table.js with our data.
-export default function DataTable({ data }) {
+export default function DataTable() {
+  const [farmsData, setFarmsData] = useState([])
+
+  const { data } = useFetch('data')
+
+  useEffect(() => {
+    if (data) { setFarmsData(data) }
+  }, [data])
 
   // We memoize the data to be passed.
-  const tableData = useMemo(() => data, [data])
+  const tableData = useMemo(() => farmsData, [farmsData])
 
   // Setting table columns.
   const columns = useMemo(() => [
