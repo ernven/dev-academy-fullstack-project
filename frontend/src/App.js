@@ -4,7 +4,7 @@ import { Typography } from '@mui/material'
 
 import useFetch from './utils/useFetch'
 import HeaderDrawer from './components/HeaderDrawer/HeaderDrawer'
-import DataGrid from './components/DataTable/DataGrid'
+import DataGrid from './components/DataGrid/DataGrid'
 import Graph from './components/Graphs/Chart'
 import AdminPage from './components/AdminPage/AdminPage'
 import Dashboard from './components/Dashboard/Dashboard'
