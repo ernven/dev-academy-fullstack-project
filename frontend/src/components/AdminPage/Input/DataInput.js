@@ -45,12 +45,12 @@ export default function DataInput() {
 
   const displayFileSize = () => {
     if (status.active === 1) {
-      return <Typography className='file-status-msg' color='green' >{status.text}</Typography>
+      return <Typography color='green' >{status.text}</Typography>
     } else if (status.active === 2) {
-      return <Typography className='file-status-msg' color='red' >{status.text}</Typography>
+      return <Typography color='red' >{status.text}</Typography>
     }
     if (fileSelected) {
-      return <Typography className='file-status-msg' >{Math.round(file.size / 1024.00) + ' KB'}</Typography>
+      return <Typography id='file-size-msg' >{Math.round(file.size / 1024.00) + ' KB'}</Typography>
     }
   }
 
