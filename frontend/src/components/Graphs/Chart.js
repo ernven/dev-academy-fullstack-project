@@ -8,15 +8,15 @@ function Chart({ farms }) {
   let url = ''
 
   useEffect(() => {
-    fetch(url)
-      .then(res => res.ok ? res.json() : console.log("Error fetching graph data."))
-      .then(data => {
-        const dataFormatted = data.map(i => { return {...i, date: (new Date(i.date)).toLocaleDateString()} })
-        setChartData(dataFormatted)
-      })
-      .catch(err => console.log(err))
-
-
+    if (url) {
+      fetch(url)
+        .then(res => res.ok ? res.json() : console.log("Error fetching graph data."))
+        .then(data => {
+          const dataFormatted = data.map(i => { return {...i, date: (new Date(i.date)).toLocaleDateString()} })
+          setChartData(dataFormatted)
+        })
+        .catch(err => console.log(err))
+    }
   }, [url])
 
 

@@ -1,6 +1,6 @@
 // choose farm, display data. use fetch, have url update when farm is chosen.
 import { useState } from 'react'
-import { FormControl, InputLabel, Select, MenuItem } from '@mui/material'
+import { FormControl, InputLabel, Select, MenuItem, Typography } from '@mui/material'
 
 import DashboardCard from './DashboardCard'
 
@@ -28,21 +28,17 @@ export default function Dashboard({ farms }) {
     setSelected(name)
   }
 
-  const buildFarmList = () => {
-    let items = []
-    farms.forEach(farm => items.push(<MenuItem key={farm.farm_name} value={farm.farm_name} >{farm.farm_name}</MenuItem>))
-    return items
-  }
+  // This function builds a lit of menu items containing the farms's names.
+  const buildList = () => 
+    farms.map(farm => (<MenuItem key={farm.farm_name} value={farm.farm_name} >{farm.farm_name}</MenuItem>))
 
-  const buildCards = () => {
-    let items = []
-    dashboardData.forEach(e => items.push(<DashboardCard key={Object.keys(e)[1]} data={e} />))
-    return items
-  }
+  // This function builds the cards to be displayed on the dashboard.
+  const buildCards = () => 
+    dashboardData.map(e => (<DashboardCard key={Object.keys(e)[1]} data={e} />))
 
-  const dropdownMenu = () =>
-    farms ?
-      (<FormControl sx={{width: '50vw'}}>
+  return (
+    <div>
+      <FormControl sx={{width: '50vw'}}>
         <InputLabel id='farms-label'>Farms</InputLabel>
         <Select
           labelId='farms-label'
@@ -50,17 +46,12 @@ export default function Dashboard({ farms }) {
           value={selected}
           onChange={e => getFarmData(e.target.value)}
         >
-          {buildFarmList()}
+          {buildList()}
         </Select>
-      </FormControl>)
-      : <div></div>
-
-  return (
-    <div>
-      {dropdownMenu()}
+      </FormControl>
 
       <div style={{display: 'flex', paddingTop: '5%'}} >
-        {dashboardData ? buildCards() : null}
+        {selected ? buildCards() : <Typography variant='subtitle1'>Please select a farm to show data.</Typography>}
       </div>
           
     </div>
