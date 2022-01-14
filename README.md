@@ -36,7 +36,7 @@ This needs to be executed inside **both** backend and frontend directories.
 
 #### About the Database
 
-The project was developed using a PostgreSQL (v11) database running on Azure. More info under [Project Structure]. The address to the DB will be sent along with the application to Solita for testing.
+The project was developed using a PostgreSQL (v11) database running on Azure. More info under [Project Structure](#project-structure--technologies-used). The address to the DB will be sent along with the application to Solita for testing.
 
 When running the project on your own system, one can set up their own DB server, if that is preferred. In order to create the right data structures for the project to work with, I have included my table creation scripts under the `utils` folder on the root.
 
