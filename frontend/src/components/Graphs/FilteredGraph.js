@@ -12,14 +12,15 @@ export default function FilteredGraph({ farms }) {
   useEffect(() => {
     if (selected) {
       fetch('data/filter?type=' + selected)
-        .then(res => res.ok ? res.json() : console.log('Error fetching graph data.'))
+        .then(res => res.status === 200 ? res.json() : null)
         .then(data => {
+          if (data) {
+            const dataFormatted = data.map(i => {
+              return { date: (new Date(i.date)).toLocaleDateString(), [i.farm_name]: i.read_value }
+            })
 
-          const dataFormatted = data.map(i => {
-            return { date: (new Date(i.date)).toLocaleDateString(), [i.farm_name]: i.read_value }
-          })
-
-          setChartData(dataFormatted)
+            setChartData(dataFormatted)
+          }
         })
         .catch(err => console.log(err))
     }

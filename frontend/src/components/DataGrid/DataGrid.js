@@ -12,7 +12,7 @@ export default function DataGrid() {
 
   useEffect(() => 
     fetch('data')
-      .then(res => res.ok ? res.json() : console.log('Error loading data.'))
+      .then(res => res.status === 200 ? res.json() : null)
       .then(data => setFarmsData(data))
       .catch(err => console.log(err))
   , [])
