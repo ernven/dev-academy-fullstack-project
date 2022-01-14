@@ -10,7 +10,7 @@ import Dashboard from './components/Dashboard/Dashboard'
 
 import './App.css'
 
-const Main = () => <Typography variant='h3' color='green'>Welcome to the Farms App!</Typography>
+const Main = () => <Typography variant='h3' color='orange'>Welcome to the Farms App!</Typography>
 
 // Any non matching routes will show a 404 error.
 const NoMatch = () => <Typography variant='h4'>404 - Not found</Typography>
