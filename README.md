@@ -94,18 +94,61 @@ In the following sub-sections I will go more into detail about the structure and
 
 ### Backend
 
-The backend runs on Node.JS using the express framework.
-
 For database, I have chosen PostgreSQL and I have created an instace of it on Azure (thanks to student credits). The reason for this was that it would be much easier and faster to both set up and run than doing so locally (although with docker it's somewhat simplified, but there's still the extra load on the system).
 I did not have much trouble with this, and I accessed the DB with [pgAdmin](https://www.pgadmin.org) to create tables and do maintenance.
 
 #### Database Structure
 
+The database contains two tables.
 
+`farms`
+
+| Column         | Definition                                                                                                                  |
+|----------------|-----------------------------------------------------------------------------------------------------------------------------|
+| id             | Type UUID, NOT NULL, auto generated. Primary Key.                                                                           |
+| farm_name      | Type VARCHAR(50), NOT NULL.                                                                                                 |
+
+`entries`
+
+| Column         | Definition                                                                                                                  |
+|----------------|-----------------------------------------------------------------------------------------------------------------------------|
+| entry_id       | Type bigint, NOT NULL, auto generated. Primary Key.                                                                         |
+| farm_id        | Type UUID, NOT NULL. Foreign Key, referencing farms.id.                                                                     |
+| date           | Type TIMESTAMP, NOT NULL.                                                                                                   |
+| entry_type     | Type VARCHAR(11), NOT NULL. Must be either 'pH', 'rainFall' or 'temperature'.                                               |
+| read_value     | Type NUMERIC(5,2), NOT NULL. Must be between -50.00 and 500.00, per project guidelines.                                     |
+
+### Backend
+
+The backend runs on Node.JS using the express framework.
+
+The folder structure is as follows (skipping mandatory node files and folders):
+
+backend<br/>
+&emsp;&emsp;    |- config       &emsp;&emsp;&ensp;        Contains configuration files.<br/> 
+&emsp;&emsp;    |- controllers  &ensp;                    Contains the different controllers, making up the bridge layer between the routes and the infra (db).<br/> 
+&emsp;&emsp;    |- routes       &emsp;&emsp;&ensp;        Contains the different routes used by express.<br/> 
+&emsp;&emsp;    |- utils        &emsp;&emsp;&emsp;&ensp;  Contains various utilities such as middlewares and the validation module.<br/> 
+&emsp;&emsp;    |- index.js     &emsp;&ensp;&ensp;        Entry point for the backend server.<br/> 
 
 ### Frontend
 
 The frontend web application was created with React. I have used some external libraries on parts of the application to speed up development (and have a -somewhat- pleasant looking UI). The design is basic, intended to show the features.
+
+The folder structure is (skipped small element-components):
+
+frontend<br/>
+&emsp;                |- src<br/>
+&emsp;&emsp;          |- components           &emsp;&emsp;        Contains the app's components.<br/> 
+&emsp;&emsp;&emsp;    |- AdminPage            &emsp;&emsp;&ensp;  Contains rhe component for the admin page, with subcomponents on their own folders.<br/> 
+&emsp;&emsp;&emsp;    |- Dashboard            &emsp;&emsp;        Contains the component for the dashboard and dashboard card. Also, own CSS.<br/> 
+&emsp;&emsp;&emsp;    |- DataGrid             &emsp;&emsp;&ensp;  Contains the component for the Data Grid (Table) and own CSS.<br/>  
+&emsp;&emsp;&emsp;    |- DataTable_unused     &emsp;&emsp;&ensp;  Contains the unused components with the old implementation of the table.<br/>  
+&emsp;&emsp;&emsp;    |- Graph                &emsp;&emsp;&ensp;  Contains the components for the chart and filters.<br/> 
+&emsp;&emsp;&emsp;    |- HeaderDrawer         &emsp;&emsp;&ensp;  Contains the components for the header and drawer menu.<br/> 
+&emsp;&emsp;          |- utils                &emsp;&emsp;&emsp;  Contains the validator.<br/> 
+&emsp;&emsp;          |- App.css              &emsp;&ensp;        CSS for App.js.<br/> 
+&emsp;&emsp;          |- App.js               &emsp;&ensp;        Main component of the app.<br/> 
 
 For the table component, I did at first my own implementation using react-table v7. I have used this library before and it's very good, but it really isn't suited to display large datasets (unless heavily modified, plus adding some external components). Since performance was unsatisfactory, I switched to [AG Grid](https://www.ag-grid.com). (Note: the old table components are still in an "unused" folder under `src` as they might be useful in the future)
 
