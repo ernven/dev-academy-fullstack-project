@@ -1,6 +1,7 @@
 {
   "name": "frontend",
   "version": "0.1.0",
+  "proxy": "http://localhost:2929/",
   "private": true,
   "dependencies": {
     "@ag-grid-community/client-side-row-model": "^26.2.0",
@@ -25,7 +26,6 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://localhost:2929",
   "eslintConfig": {
     "extends": [
       "react-app",

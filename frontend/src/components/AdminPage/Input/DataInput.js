@@ -25,8 +25,8 @@ export default function DataInput() {
 
       // We send the POST request to the backend.
       fetch('data', settings)
-        .then(res => res.ok ? res.json() : res.json().then(r => setStatus({ active: 2, text: r.error.detail })))
-        .then(data => setStatus({ active: 1, text: 'Data was added to the database!' }))
+        .then(res => res.status === 201 ? res.json() : res.json().then(r => setStatus({ active: 2, text: r.error.detail })))
+        .then(data => data ? setStatus({ active: 1, text: 'Data was added to the database!' }) : null)
         .catch(err => setStatus({ active: 2, text: err }))
 
     } else {

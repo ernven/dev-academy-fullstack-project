@@ -84,13 +84,10 @@ function prepareDataFromCsv(request, response) {
   bb.on('file', (_name, file, _info) => {
       file.on('readable', () => {
         let data
-        while ((data = file.read()) !== null) {
-            parser.write(data)
-          }
+        while ((data = file.read()) !== null) { parser.write(data) }
         })
       file.on('end', () => parser.end())
     })
-
   bb.on('finish', () => {
     parser.on('readable', () => {
       let data
@@ -119,23 +116,24 @@ function prepareDataFromCsv(request, response) {
           
           const foundId = found[0].id
 
+          let validEntries = []
+
           // Formatting and validating rows. If all good, we add them to the array to be inserted.
-          let validEntries = rows.map(r => {
-
-            
+          rows.forEach(r => {
             // Double check the farm name is the same!
-            if (r.farm_name === farmName) {
-              r.id = foundId
-
-              if (isValidEntry(r)) { return r }
+            if (r.farm_id === farmName) {
+              // Replace the name with farm id.
+              r.farm_id = foundId
+              // Check validity, if good then add to array to be inserted.
+              if (isValidEntry(r)) { validEntries.push(r) }
             }
           })
 
-        // Finally, we insert the entries into the db, if there are any.
-        validEntries === [] ?
-          response.status(400).json({error: {detail: 'The file did not contain any valid data.'}})
-          : insertData(validEntries, response)
-      })
+          // Finally, we insert the entries into the db, if there are any.
+          validEntries === [] ?
+            response.status(400).json({error: {detail: 'The file did not contain any valid data.'}})
+            : insertData(validEntries, response)
+        })
     })
     parser.end()
   })
