@@ -6,7 +6,23 @@ I have worked on this a little over one week, since I have only found out about 
 
 # Table Of Contents
 
-Index here
+- [Title](#dev-academy-full-stack-project)
+    - [First Steps](#first-steps)
+        - [How To Set Up](#how-to-set-up)
+                - [About the Database](#about-the-database)
+        - [How To Run](#how-to-run) 
+    - [Using The System](#using-the-system)
+         - [API Reference](#api-reference)
+                 - [Querying data from the DB](#querying-data-from-the-db)
+                 - [Getting calculated data](#getting-calculated-data)
+                 - [Inserting data into the DB](#inserting-data-into-the-db)
+        - [Using the frontend app](#using-the-frontend-app)
+    - [Project Structure & Technologies used](#project-structure--technologies-used)
+        - [Backend](#backend)
+            - [Database Structure](#database-structure)
+            - [Backend File Structure](#backend-file-structure)
+        - [Frontend](#frontend)
+    - [Closing remarks](#closing-remarks)
 
 ## First Steps
 
@@ -39,7 +55,7 @@ With default settings and the environment variables properly set, each should ha
 
 The backend can be tested by running queries any of the endpoints (more info about these in the next section). The frontend can be tested by going to localhost:3000 (by default) on your browser.
 
-## Using the system
+## Using The System
 
 #### API Reference
 
@@ -47,7 +63,7 @@ Since the project guidelines are quite open, the data is served from the backend
 
 The following endpoints are implemented:
 
-##### Querying Data From The DB
+##### Querying data from the DB
 
 `GET /farms` - Returns all farm names and ids.
 
@@ -66,7 +82,7 @@ The following endpoints are implemented:
 `GET /data/chart-format` - This will return data best suited to be formatted to use with recharts. It should be queried for a spefic type and returns only date, farm_name and read_value.
 Different charts might have different data needs, however, for example if one wanted to show min, max values, the previous would be more useful.
 
-##### Inserting Data Into The DB
+##### Inserting data into the DB
 
 `POST /farms` - Used for adding new farms to the database.
 
@@ -118,7 +134,7 @@ The database contains two tables.
 | entry_type     | Type VARCHAR(11), NOT NULL. Must be either 'pH', 'rainFall' or 'temperature'.                                               |
 | read_value     | Type NUMERIC(5,2), NOT NULL. Must be between -50.00 and 500.00, per project guidelines.                                     |
 
-### Backend
+#### Backend File Structure 
 
 The backend runs on Node.JS using the express framework.
 
