@@ -31,8 +31,9 @@ export default function Dashboard({ farms }) {
   }
 
   // This function builds a lit of menu items containing the farms's names.
-  const buildList = () => 
+  const buildList = () => farms ?
     farms.map(farm => (<MenuItem key={farm.farm_name} value={farm.farm_name} >{farm.farm_name}</MenuItem>))
+    : null
 
   // This function builds the cards to be displayed on the dashboard.
   const buildCards = () => 

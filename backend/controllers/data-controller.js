@@ -5,9 +5,12 @@ import { parse } from 'csv-parse'
 import { dbConfig } from '../config/config.js'
 import { isValidEntry, isValidQuery, isValidMonth } from '../utils/validator.js'
 
+// Initializing knex for building queries with our config.
 const query = knex(dbConfig)
 
-// This -helper- function sets additional filter to the DB query.
+// HELPER FUNCTIONS
+
+// This function sets additional filters to the DB query.
 function setQueryFilters(queryBuilder, params) {
   if (params) {
     // If present, filter by type(s).
@@ -37,14 +40,14 @@ function setQueryFilters(queryBuilder, params) {
   }
 }
 
-// This helper function inserts the data into the db.
+// This function inserts the data into the database.
 function insertData(data, response) {
   query('entries').insert(data)
     .then(r => response.status(201).json({command: r.command, status: 'success'}))
     .catch(err => response.status(500).json({error: err}))
 }
 
-// This helper function handles the parsing of JSON from the request body. Then sends it for insert into the db.
+// This function handles the parsing of JSON from the request body, then sends it for insert into the db.
 function prepareDataFromText(request, response) {
   const body = []
 
@@ -66,7 +69,7 @@ function prepareDataFromText(request, response) {
   })
 }
 
-// This helper function handles the parsing of the csv file and formatting of the data. Then sends it for insert.
+// This function handles the parsing of the csv file and formatting of the data, then sends it for insert.
 function prepareDataFromCsv(request, response) {
 
   let rows = []
@@ -140,7 +143,9 @@ function prepareDataFromCsv(request, response) {
   request.pipe(bb)
 }
 
-// This function gets all Farms' data from the DB.
+// CONTROLLER FUNCTIONS
+
+// This function gets all the farms's data from the DB.
 export function listData(_, response) {
   query('entries')
     .join('farms', 'entries.farm_id', 'farms.id')
@@ -149,7 +154,7 @@ export function listData(_, response) {
     .catch(err => response.status(500).json({error: err}))
 }
 
-// This function gets all Farms' data from the DB.
+// This function gets farms's data from the DB for a particular period (e.g. year, month).
 export function listDataByPeriod(request, response) {
   // We create the basic query structure.
   let listQuery = query('entries')
@@ -253,7 +258,7 @@ export function listDataForCharts(request, response) {
   let listQuery = query('entries')
   listQuery
     .join('farms', 'entries.farm_id', 'farms.id')
-    .select('date', 'read_value')
+    .select('date', 'farm_name', 'read_value')
   
   // If the request contains query parameters, values should be valid or the query returns No Content.
   // If they are valid, we use .modify to handle optional parameters (using the helper function).
@@ -271,7 +276,7 @@ export function listDataForCharts(request, response) {
     .catch(err => response.status(500).json({error: err}))
 }
 
-// This function handles the inserting of new farms' data into the database.
+// This function handles the inserting of new farms's data into the database.
 export function saveData(request, response) {
   const contentType = request.headers['content-type']
 

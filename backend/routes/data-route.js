@@ -21,7 +21,7 @@ router.get('/averages', listAverages)
 router.get('/extremes', listMinMaxValues)
 
 // GET data formatted to draw charts with.
-router.get('/chart-data', listDataForCharts)
+router.get('/chart-format', listDataForCharts)
 
 // POST new farm data, either as JSON object(s) or from a CSV file.
 router.post('/', saveData)
