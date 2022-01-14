@@ -7,7 +7,7 @@ const query = knex(dbConfig)
 
 // This method gets all Farm names from the database.
 export function listFarms(_, response) {
-  query('farm')
+  query('farms')
     .orderBy('farm_name')
     .then(r => r.length !== 0 ? response.status(200).json(r) : response.status(204).end())
     .catch(err => response.status(500).json({error: err}))
@@ -26,7 +26,7 @@ export function createFarm(request, response) {
 
         // If not valid, or errors are found, no inserting is done.
         isValidFarmName(entry.farm_name)
-          ? query('farm').insert(entry)
+          ? query('farms').insert(entry)
             .then(r => response.status(201).json({command: r.command, status: 'success'}))
             .catch(err => response.status(500).json({error: err}))
           : response.status(400).send('Error: Invalid input name (' + entry.farm_name + ').')

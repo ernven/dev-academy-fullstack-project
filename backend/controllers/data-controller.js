@@ -1,5 +1,6 @@
 import knex from 'knex'
 import busboy from 'busboy'
+import { parse } from 'csv-parse'
 
 import { dbConfig } from '../config/config.js'
 import { isValidEntry, isValidQuery, isValidMonth } from '../utils/validator.js'
@@ -38,7 +39,7 @@ function setQueryFilters(queryBuilder, params) {
 
 // This helper function inserts the data into the db.
 function insertData(data, response) {
-  query('entry').insert(data)
+  query('entries').insert(data)
     .then(r => response.status(201).json({command: r.command, status: 'success'}))
     .catch(err => response.status(500).json({error: err}))
 }
@@ -68,60 +69,83 @@ function prepareDataFromText(request, response) {
 // This helper function handles the parsing of the csv file and formatting of the data. Then sends it for insert.
 function prepareDataFromCsv(request, response) {
 
-  // Busboy is used to parse multipart content.
-  const bb = busboy({ headers: request.headers })
-  let body
   let rows = []
 
-  bb
-    .on('file', (_name, file, _info) => {
-      file
-        .on('data', data => body = data)
-        .on('end', () => rows = body.toString().split('\n'))
+  // Busboy is used to parse multipart content.
+  const bb = busboy({ headers: request.headers })
+
+  const parser = parse({
+    delimiter: ',',
+    max_record_size: 200,
+    // We can name the first column farm_id already, since that is what we'll use for inserting.
+    columns: ['farm_id', 'date', 'entry_type', 'read_value']
+  })
+
+  bb.on('file', (_name, file, _info) => {
+      file.on('readable', () => {
+        let data
+        while ((data = file.read()) !== null) {
+            parser.write(data)
+          }
+        })
+      file.on('end', () => parser.end())
     })
-    .on('finish', () => {
+
+  bb.on('finish', () => {
+    parser.on('readable', () => {
+      let data
+      while ((data = parser.read()) !== null) {
+          rows.push(data)
+      }
+    })
+    parser.on('error', (err) => console.error(err.message))
+    parser.on('end', () => {
+
       // Check if there's at least one data entry (0 being the header).
       if (!rows[1]) { return response.status(204).end() }
           
-      // We need the farm ID for inserting.
-      // Since data comes from a farm, should be the same for all (we can validate that later).
-      const farmName = rows[1].split(',')[0]
+      // We need the farm ID for inserting, which we get from the db based on the farm's name (skip first row/headers).
+      // Since data comes from a farm, should be the same for all entries (we can validate that later).
+      // The field was called farm_id but data from csv include only names, so we use that.
+      const farmName = rows[1].farm_id
       
-      query('farm').select('id').where('farm_name', farmName)
+      query('farms').select('id').where('farm_name', farmName)
         .then(found => {
           // Check if farm exists. If not, no inserting is done (wouldn't work anyway).
           // NOTE: We could also add the farm now. This depends on how the app is intended to work.
           if (!found[0]) {
             return response.status(400).json({error: {detail: 'Farm must be in the database first. Nothing was added.'}})
           }
-
-          let validEntries = []
+          
+          const foundId = found[0].id
 
           // Formatting and validating rows. If all good, we add them to the array to be inserted.
-          rows.forEach(r => {
-            const fields = r.split(',')
+          let validEntries = rows.map(r => {
 
+            
             // Double check the farm name is the same!
-            if (fields[0] === farmName) {
-              const entry = { farm_id: found[0].id, date: fields[1], entry_type: fields[2], read_value: fields[3] } 
+            if (r.farm_name === farmName) {
+              r.id = foundId
 
-              if (isValidEntry(entry)) { validEntries.push(entry) } else { console.log(entry + ' is not valid.')}
+              if (isValidEntry(r)) { return r }
             }
           })
 
-          console.log(validEntries)
-
-          // Finally, we insert the entries into the db.
-          //insertData(validEntries, response)
-        })
+        // Finally, we insert the entries into the db, if there are any.
+        validEntries === [] ?
+          response.status(400).json({error: {detail: 'The file did not contain any valid data.'}})
+          : insertData(validEntries, response)
+      })
     })
+    parser.end()
+  })
   request.pipe(bb)
 }
 
 // This function gets all Farms' data from the DB.
 export function listData(_, response) {
-  query('entry')
-    .join('farm', 'entry.farm_id', 'farm.id')
+  query('entries')
+    .join('farms', 'entries.farm_id', 'farms.id')
     .select('entry_id', 'farm_name', 'date', 'entry_type', 'read_value')
     .then(r => r.length !== 0 ? response.status(200).json(r) : response.status(204).end())
     .catch(err => response.status(500).json({error: err}))
@@ -130,9 +154,9 @@ export function listData(_, response) {
 // This function gets all Farms' data from the DB.
 export function listDataByPeriod(request, response) {
   // We create the basic query structure.
-  let listQuery = query('entry')
+  let listQuery = query('entries')
   listQuery
-    .join('farm', 'entry.farm_id', 'farm.id')
+    .join('farms', 'entries.farm_id', 'farms.id')
     .select('entry_id', 'farm_name', 'date', 'entry_type', 'read_value')
 
   // We validate the year (and month, if exists) and pass it as filters in the query.
@@ -158,9 +182,9 @@ export function listDataByPeriod(request, response) {
 // This function gets Farms' data from the DB (filtered with request parameters).
 export function listDataWithFilters(request, response) {
   // We create the basic query structure.
-  let listQuery = query('entry')
+  let listQuery = query('entries')
   listQuery
-    .join('farm', 'entry.farm_id', 'farm.id')
+    .join('farms', 'entries.farm_id', 'farms.id')
     .select('entry_id', 'farm_name', 'date', 'entry_type', 'read_value')
 
   // If the request contains query parameters, values should be valid or the query returns No Content.
@@ -181,9 +205,9 @@ export function listDataWithFilters(request, response) {
 
 // This function returns averages of each type, for a certain farm.
 export function listAverages(request, response) {
-  let listQuery = query('entry')
+  let listQuery = query('entries')
   listQuery
-    .join('farm', 'entry.farm_id', 'farm.id')
+    .join('farms', 'entries.farm_id', 'farms.id')
     .select('farm_name', 'entry_type', query.raw('ROUND(AVG(read_value),2) AS average_value'))
 
   // If the request contains query parameters, values should be valid or the query returns No Content.
@@ -204,9 +228,9 @@ export function listAverages(request, response) {
 
 // This function returns min and max values of each type, for a certain farm.
 export function listMinMaxValues(request, response) {
-  let listQuery = query('entry')
+  let listQuery = query('entries')
   listQuery
-    .join('farm', 'entry.farm_id', 'farm.id')
+    .join('farms', 'entries.farm_id', 'farms.id')
     .select('farm_name', 'entry_type', query.raw('MAX(read_value) AS max_value'),
       query.raw('MIN(read_value) AS min_value'))
     .groupBy('farm_name', 'entry_type')
@@ -228,9 +252,9 @@ export function listMinMaxValues(request, response) {
 
 // This function returns data in a format best suited for drawing charts.
 export function listDataForCharts(request, response) {
-  let listQuery = query('entry')
+  let listQuery = query('entries')
   listQuery
-    .join('farm', 'entry.farm_id', 'farm.id')
+    .join('farms', 'entries.farm_id', 'farms.id')
     .select('date', 'read_value')
   
   // If the request contains query parameters, values should be valid or the query returns No Content.
