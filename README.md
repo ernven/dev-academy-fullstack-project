@@ -139,16 +139,16 @@ The folder structure is (skipped small element-components):
 
 frontend<br/>
 &emsp;                |- src<br/>
-&emsp;&emsp;          |- components           &emsp;&emsp;        Contains the app's components.<br/> 
-&emsp;&emsp;&emsp;    |- AdminPage            &emsp;&emsp;&ensp;  Contains rhe component for the admin page, with subcomponents on their own folders.<br/> 
-&emsp;&emsp;&emsp;    |- Dashboard            &emsp;&emsp;        Contains the component for the dashboard and dashboard card. Also, own CSS.<br/> 
-&emsp;&emsp;&emsp;    |- DataGrid             &emsp;&emsp;&ensp;  Contains the component for the Data Grid (Table) and own CSS.<br/>  
-&emsp;&emsp;&emsp;    |- DataTable_unused     &emsp;&emsp;&ensp;  Contains the unused components with the old implementation of the table.<br/>  
-&emsp;&emsp;&emsp;    |- Graph                &emsp;&emsp;&ensp;  Contains the components for the chart and filters.<br/> 
-&emsp;&emsp;&emsp;    |- HeaderDrawer         &emsp;&emsp;&ensp;  Contains the components for the header and drawer menu.<br/> 
-&emsp;&emsp;          |- utils                &emsp;&emsp;&emsp;  Contains the validator.<br/> 
-&emsp;&emsp;          |- App.css              &emsp;&ensp;        CSS for App.js.<br/> 
-&emsp;&emsp;          |- App.js               &emsp;&ensp;        Main component of the app.<br/> 
+&emsp;&emsp;          |- components<br/>
+&emsp;&emsp;&emsp;    |- AdminPage<br/>
+&emsp;&emsp;&emsp;    |- Dashboard<br/>
+&emsp;&emsp;&emsp;    |- DataGrid<br/>
+&emsp;&emsp;&emsp;    |- DataTable_unused<br/>
+&emsp;&emsp;&emsp;    |- Graph<br/>
+&emsp;&emsp;&emsp;    |- HeaderDrawer<br/>
+&emsp;&emsp;          |- utils<br/>
+&emsp;&emsp;          |- App.css<br/> 
+&emsp;&emsp;          |- App.js<br/>
 
 For the table component, I did at first my own implementation using react-table v7. I have used this library before and it's very good, but it really isn't suited to display large datasets (unless heavily modified, plus adding some external components). Since performance was unsatisfactory, I switched to [AG Grid](https://www.ag-grid.com). (Note: the old table components are still in an "unused" folder under `src` as they might be useful in the future)
 
