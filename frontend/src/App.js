@@ -21,7 +21,7 @@ function App() {
   // At first render, we fetch the list of farms to pass on to other components.
   useEffect(() => 
     fetch('farms')
-      .then(res => res.ok ? res.json() : console.log('Error loading farms.'))
+      .then(res => res.ok ? res.json() : null)
       .then(data => setFarms(data))
       .catch(err => console.log(err))
   , [])
