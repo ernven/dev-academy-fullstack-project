@@ -45,3 +45,10 @@ id uuid NOT NULL DEFAULT gen_random_uuid (),
 
 (Azure doesn"t support it, but Heroku does, for example)
 */
+
+-- Once tables are created, farm names can be entered more easily with this statement: (can also be done thru UI)
+INSERT INTO farms (farm_name) VALUES
+  ('Friman Metsola collective'),
+  ('Noora''s farm'),
+  ('Organic Ossi''s Impact That Lasts plantase'),
+  ('PartialTech Research Farm');
