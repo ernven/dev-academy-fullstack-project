@@ -7,15 +7,15 @@ import '@ag-grid-community/core/dist/styles/ag-theme-material.css'
 // Custom css to center the headers.
 import './DataGrid.css'
 
-export default function DataGrid() {
+export default function DataGrid({ apiURL }) {
   const [farmsData, setFarmsData] = useState([])
 
   useEffect(() => 
-    fetch(process.env.REACT_APP_API_URL + 'data')
+    fetch(apiURL + 'data')
       .then(res => res.status === 200 ? res.json() : null)
       .then(data => setFarmsData(data))
       .catch(err => console.log(err))
-  , [])
+  , [apiURL])
 
   // Defining the data and columns, memoized to prevent unnecessary updates.
   const tableData = useMemo(() => farmsData, [farmsData])

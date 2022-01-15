@@ -6,7 +6,7 @@ import DashboardCard from './DashboardCard'
 
 import './Dashboard.css'
 
-export default function Dashboard({ farms }) {
+export default function Dashboard({ farms, apiURL }) {
   const [dashboardData, setDashboardData] = useState([])
   const [selected, setSelected] = useState('')
 
@@ -15,11 +15,11 @@ export default function Dashboard({ farms }) {
     let toInsert = []
 
     // Since we're sending requests to two endpoints, we need to chain them.
-    const averages = await fetch(process.env.REACT_APP_API_URL + 'data/averages?name=' + name).then(res => res.status === 200 ? res.json() : [])
+    const averages = await fetch(apiURL + 'data/averages?name=' + name).then(res => res.status === 200 ? res.json() : [])
 
     averages.forEach(i => toInsert.push({name: i.farm_name, [i.entry_type]: {average: i.average_value}}))
 
-    const extremes = await fetch(process.env.REACT_APP_API_URL + 'data/extremes?name=' + name).then(res => res.status === 200 ? res.json() : [])
+    const extremes = await fetch(apiURL + 'data/extremes?name=' + name).then(res => res.status === 200 ? res.json() : [])
 
     for (let i = 0; i < extremes.length; i++) {
       const obj = toInsert[i][extremes[i].entry_type]

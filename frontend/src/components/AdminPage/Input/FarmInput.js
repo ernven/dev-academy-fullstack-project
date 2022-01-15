@@ -6,7 +6,7 @@ import { isValidFarmName } from '../../../utils/Validator'
 
 import './Input.css'
 
-export default function FarmInput() {
+export default function FarmInput({ apiURL }) {
   const [farm, setFarm] = useState('')
 
   // This state stores the status of the user's operation.
@@ -24,7 +24,7 @@ export default function FarmInput() {
       }
 
       // We send the POST request to the backend.
-      fetch(process.env.REACT_APP_API_URL + 'farms', settings)
+      fetch(apiURL + 'farms', settings)
         .then(res =>
           res.ok
             ? res.json()

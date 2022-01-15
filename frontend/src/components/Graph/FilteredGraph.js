@@ -6,7 +6,7 @@ import Chart from './Chart'
 // This component will pass data to the chart one to draw a graph of daily averages for the year 2020.
 // The data is by farm and based on a certain type, chosen by the user (via the UI).
 // In the future, time span could also be customized, as well as which farms should the data be shown for.
-export default function FilteredGraph({ farms }) {
+export default function FilteredGraph({ farms, apiURL }) {
   const [chartData, setChartData] = useState([])
   const [selected, setSelected] = useState('')
 
@@ -17,7 +17,7 @@ export default function FilteredGraph({ farms }) {
   useEffect(() => {
     if (selected) {
       // Currently shows the data for 2020. This could be made customizable with a date picker, for example.
-      fetch(process.env.REACT_APP_API_URL + 'data/chart-format?startDate=2020-01-01&endDate=2020-12-31&type=' + selected)
+      fetch(apiURL + 'data/chart-format?startDate=2020-01-01&endDate=2020-12-31&type=' + selected)
         .then(res => res.status === 200 ? res.json() : null)
         .then(data => {
           if (data) {
@@ -49,7 +49,7 @@ export default function FilteredGraph({ farms }) {
         })
         .catch(err => console.log(err))
     }
-  }, [selected])
+  }, [selected, apiURL])
 
   // This function handles the setting of filters (via the request url).
   const changeFilter = type => setSelected(type)
