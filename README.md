@@ -4,13 +4,18 @@ Project done as part of the application to Solita's Dev Academy. Original assign
 
 I have worked on this a little over one week, since I have only found out about the assignment recently. It would have been good to have more time, but I wanted to give it a try anyway.
 
+In this readme I will go first through the steps for setting up the application and running it. There is a brief explanation about how I deployed it to Heroku (since this is very platform-dependant).
+There is a section about how to use the application, where the API is described, as well as the features of the frontend app. Lastly, the remaining sections describe the project structure in detail, including the technologies used and the reason for their choice, and a few closing remarks.
+
 # Table Of Contents
 
 - [Title](#dev-academy-full-stack-project)
     - [First Steps](#first-steps)
         - [How To Set Up](#how-to-set-up)
                 - [About the Database](#about-the-database)
-        - [How To Run](#how-to-run) 
+                - [Environment Variables](#environment-variables)
+        - [How To Run](#how-to-run)
+            - [Deployment](#deployment)
     - [Using The System](#using-the-system)
          - [API Reference](#api-reference)
                  - [Querying data from the DB](#querying-data-from-the-db)
@@ -36,13 +41,30 @@ This needs to be executed inside **both** backend and frontend directories.
 
 #### About the Database
 
-The project was developed using a PostgreSQL (v11) database running on Azure. More info under [Project Structure](#project-structure--technologies-used). The address to the DB will be sent along with the application to Solita for testing.
+The project was developed using a PostgreSQL (v11) database running on Azure. More info under [Project Structure](#project-structure--technologies-used). This database is behind a firewall, so it cannot be accessed unless I create rules for it (which I have made for myself).
 
-When running the project on your own system, one can set up their own DB server, if that is preferred. In order to create the right data structures for the project to work with, I have included my table creation scripts under the `utils` folder on the root.
+For production, since the deployment was made to Heroku, a second DB was created on the platform. The API allows to query the data by using the endpoints described in [API Reference](#api-reference) with the deployment URL which was sent as part of the application, in the cover letter, so it can be tested freely.
 
-Remember to update the connection details on `backend/config/config.js`. The app should work fine with PostgreSQL without any further changes.
+When running the project on your own system, one can set up their own DB server. In order to create the right data structures for the project to work with, I have included my table creation scripts under the `utils` folder on the root. Remember to update the connection details on `backend/config/config.js`, and the required environment variables! The app should work fine with PostgreSQL without any further changes.
 
 For other SQL dialects, the required driver used by the backend must be installed; more information [here](https://knexjs.org/#Installation). The SQL statements might also needs small changes for another server/dialect, careful with that!
+
+#### Environment Variables
+
+The backend uses some data stored in environment variables. This means they have to be declared in the environment, at runtime or in a **.env** file located in the backend folder (root of the backend sub-project).
+
+I have used during development the last option, as it's the easiest to work with. The script run with npm start will load them. 
+For deployment, I added them -called _config vars_ in Heroku- through the user interface, under _Settings_.
+
+The following should be set for the application to work properly:
+
+`PORT` - Port used by the backend. Not required when deploying to Heroku.
+
+`NODE_ENV`- Either equal to production or development, depending which version are we planning to run.
+
+`DATABASE_URL` - The URL connection string for the database, or the URL string if we are setting the rest of the details (PORT, NAME, USER, PASSWORD) separately. If done that way, also modify the config file!
+
+I could provide the used .env file if needed (and open the DB firewall as well).
 
 ### How To Run
 
@@ -54,6 +76,22 @@ Both the backend server and frontend web app can be run in development mode by g
 With default settings and the environment variables properly set, each should have their own port and the frontend will proxy to the backend, thus avoiding CORS errors when sending requests.
 
 The backend can be tested by running queries any of the endpoints (more info about these in the next section). The frontend can be tested by going to localhost:3000 (by default) on your browser.
+
+#### Deployment
+
+For deployment, I chose to do it on Heroku as I have also some experience with it, and last time it was somewhat easier than on Azure (although I did have the DB ready this time).
+
+If one wants to run the production build, they can build the frontend app first by going to the `frontend` directory and running:
+
+    npm run build
+    
+This will create it under the `build` folder, which can be copied inside the `backend` dir.
+
+Once this is ready, an app and a postgres DB have been created in Heroku and the environment variables have been set, the backend app -which will serve both frontend **and** backend- can be deployed.
+
+More information on [Heroku Dev Center](https://devcenter.heroku.com/articles/git).
+
+Heroku also supports deploying docker containers, so that is an option as well. This way was simply faster right now, and time was pressing.
 
 ## Using The System
 
@@ -177,12 +215,18 @@ The UI is built using [Material-UI](https://mui.com).
 
 This was quite a big project to do as a pre-assignment, but I am glad to have done it and I hope the results will be satisfactory. Not all features asked were implemented due to lack of time (I only started the project in the first week of January 2022, less than two weeks before the due date).
 
-Many of the aspects of the implementation and features were based on assumptions, especially on the frontend app. In a real project, these questions would have been addressed in cooperation with both the team and the customer as they are mostly business-related. Some examples could be:
-Should we display all the farms at once, or only one at a time? Basically, should the data from all farms be available to all users or should it be on a per user basis?
+Many of the aspects of the implementation and features were based on assumptions, especially on the frontend app. Of course, in a real project, these questions would have been addressed in cooperation with both the team and the customer as they are mostly business-related. Some examples could be:
+Should we display all the farms at once, or only one at a time? In other words, should the data from all farms be available to all users or should it be on a per user basis?
 Is the table an important feature, listing large portions of the data, or is the software meant to be used as a dashboard, displaying mostly charts and important metrics?
 
-And so on.
+From this I mean that the features are more intended as a proof-of-concept of what could be implemented and improved on, depending on the nature of the application to be delivered.
 
 The backend is pretty good at handling different scenarios already, and more could be added on top without much hassle. If custom queries were to be crucial in the operation of the system, a GraphQL API could be a great addition, and it's not overly complicated to do. Again, this could be something discussed among the dev team.
 
-Ultimately, I think the base is very good, and features could be added/taken easily as the development progresses.
+Ultimately, I think the base is very good, and features could be added/taken away easily as the development progresses.
+
+### What's missing
+
+The main missing feature which I did not have enough time to implement was automated testing. 
+
+I don't have -yet- so much experience with it, having only done some React testing and GitHub Actions automation during my last school project, so it would have been impossible to implement enough tests in both the backend and frontend in just a day or two. Sadly, we have not gotten enough learning and practice with it during our courses and school projects, so all I know has been learnt on my own. I know it's a crucial skill to have as a developer, so I hope to learn much more about it in the future! This project could be a useful base for it, which I could continue.
