@@ -11,7 +11,7 @@ export default function DataGrid() {
   const [farmsData, setFarmsData] = useState([])
 
   useEffect(() => 
-    fetch('data')
+    fetch(process.env.REACT_APP_API_URL + 'data')
       .then(res => res.status === 200 ? res.json() : null)
       .then(data => setFarmsData(data))
       .catch(err => console.log(err))

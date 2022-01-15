@@ -20,7 +20,7 @@ function App() {
 
   // At first render, we fetch the list of farms to pass on to other components.
   useEffect(() => 
-    fetch('farms')
+    fetch(process.env.REACT_APP_API_URL + 'farms')
       .then(res => res.status === 200 ? res.json() : null)
       .then(data => setFarms(data))
       .catch(err => console.log(err))

@@ -24,7 +24,7 @@ export default function FarmInput() {
       }
 
       // We send the POST request to the backend.
-      fetch('farms', settings)
+      fetch(process.env.REACT_APP_API_URL + 'farms', settings)
         .then(res =>
           res.ok
             ? res.json()

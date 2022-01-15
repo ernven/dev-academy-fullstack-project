@@ -17,7 +17,7 @@ export default function FilteredGraph({ farms }) {
   useEffect(() => {
     if (selected) {
       // Currently shows the data for 2020. This could be made customizable with a date picker, for example.
-      fetch('data/chart-format?startDate=2020-01-01&endDate=2020-12-31&type=' + selected)
+      fetch(process.env.REACT_APP_API_URL + 'data/chart-format?startDate=2020-01-01&endDate=2020-12-31&type=' + selected)
         .then(res => res.status === 200 ? res.json() : null)
         .then(data => {
           if (data) {
