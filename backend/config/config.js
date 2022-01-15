@@ -4,7 +4,8 @@ export const appConfig = {
 
 export const dbConfig = {
   client: 'pg',
-  connection: process.env.PG_CONNECTION_STRING,
+  // We can pass an URL String instead of all parameters separately.
+  connection: process.env.DATABASE_URL,
   /*
   connection: {
     host: process.env.DB_URI,
