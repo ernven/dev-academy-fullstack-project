@@ -28,7 +28,7 @@ export function createFarm(request, response) {
         isValidFarmName(entry.farm_name)
           ? query('farms').insert(entry)
             .then(r => response.status(201).json({command: r.command, status: 'success'}))
-            .catch(err => response.status(500).json({error: err}))
+            .catch(err => response.status(200).json({error: err}))
           : response.status(400).send('Error: Invalid input name (' + entry.farm_name + ').')
       } catch {
         return response.status(400).send('There was a problem with your request.')

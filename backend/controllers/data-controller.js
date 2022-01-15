@@ -114,7 +114,7 @@ function prepareDataFromCsv(request, response) {
           // Check if farm exists. If not, no inserting is done (wouldn't work anyway).
           // NOTE: We could also add the farm now. This depends on how the app is intended to work.
           if (!found[0]) {
-            return response.status(400).json({error: {detail: 'Farm must be in the database first. Nothing was added.'}})
+            return response.status(200).json({error: {detail: 'Farm must be in the database first. Nothing was added.'}})
           }
           
           const foundId = found[0].id
@@ -134,7 +134,7 @@ function prepareDataFromCsv(request, response) {
 
           // Finally, we insert the entries into the db, if there are any.
           validEntries === [] ?
-            response.status(400).json({error: {detail: 'The file did not contain any valid data.'}})
+            response.status(200).json({error: {detail: 'The file did not contain any valid data.'}})
             : insertData(validEntries, response)
         })
     })
