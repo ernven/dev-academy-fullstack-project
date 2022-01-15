@@ -10,8 +10,6 @@ import Dashboard from './components/Dashboard/Dashboard'
 
 import './App.css'
 
-const apiURL = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_API_URL : ''
-
 const Main = () => <Typography variant='h3' color='orange'>Welcome to the Farms App!</Typography>
 
 // Any non matching routes will show a 404 error.
@@ -22,7 +20,7 @@ function App() {
 
   // At first render, we fetch the list of farms to pass on to other components.
   useEffect(() => 
-    fetch(apiURL + 'farms')
+    fetch('farms')
       .then(res => res.status === 200 ? res.json() : null)
       .then(data => setFarms(data))
       .catch(err => console.log(err))
@@ -35,10 +33,10 @@ function App() {
         <div id='route-elements'>
           <Routes>
             <Route path='/' element={Main()} />
-            <Route path='admin' element={<AdminPage apiURL={apiURL} />} />
-            <Route path='table' element={<DataGrid apiURL={apiURL} />} />
-            <Route path='graph' element={<FilteredGraph farms={farms} apiURL={apiURL} />} />
-            <Route path='dashboard' element={<Dashboard farms={farms} apiURL={apiURL} />} />
+            <Route path='admin' element={<AdminPage />} />
+            <Route path='table' element={<DataGrid />} />
+            <Route path='graph' element={<FilteredGraph farms={farms} />} />
+            <Route path='dashboard' element={<Dashboard farms={farms} />} />
             <Route path='*' element={NoMatch()} />
           </Routes>
         </div>

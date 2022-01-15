@@ -8,7 +8,7 @@ export const dbConfig = process.env.NODE_ENV === 'production' ?
   {
     client: 'pg',
     connection: {
-      connectionString: process.env.DATABASE_URL + '?sslmode=require,',
+      connectionString: process.env.DATABASE_URL,
       ssl: { rejectUnauthorized: false },
     }
   }

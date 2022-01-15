@@ -1,6 +1,5 @@
 import express from 'express'
-// In DEPLOYMENT,, we need to import a few more modules (uncomment these lines).
-// import cors from 'cors'
+// In DEPLOYMENT, we need to import the path module (uncomment next line).
 // import * as path from 'path'
 
 import farms from './routes/farms-route.js'
@@ -10,12 +9,6 @@ import { endpointHandler, errorHandler } from './utils/middleware.js'
 import { appConfig } from './config/config.js'
 
 const app = express()
-
-// In DEPLOYMENT, enable cors for our frontend (since the proxy won't work).
-if(process.env.NODE_ENV === 'production') {
-  //app.use(cors({ origin: 'https://localhost:3000', methods: 'GET, POST'
-  app.use(cors({ origin: process.env.APP_URL, methods: 'GET, POST', credentials: true}))
-}
 
 // Requests defined in the routing.
 app.use('/farms', farms)

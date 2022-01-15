@@ -3,7 +3,7 @@ import { Typography, Button, Input } from '@mui/material'
 
 import './Input.css'
 
-export default function DataInput({ apiURL }) {
+export default function DataInput() {
   const [file, setFile] = useState(null)
   const [fileSelected, setFileSelected] = useState(false)
 
@@ -24,7 +24,7 @@ export default function DataInput({ apiURL }) {
       }
 
       // We send the POST request to the backend.
-      fetch(apiURL + 'data', settings)
+      fetch('data', settings)
         .then(res => res.status === 201 ? res.json() : res.json().then(r => setStatus({ active: 2, text: r.error.detail })))
         .then(data => data ? setStatus({ active: 1, text: 'Data was added to the database!' }) : null)
         .catch(err => setStatus({ active: 2, text: err }))
