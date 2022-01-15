@@ -12,7 +12,7 @@ export const dbConfig = process.env.NODE_ENV === 'production' ?
       ssl: { rejectUnauthorized: false },
     }
   }
-  // Used during dev with Azure Postgres DB
+  // Used during development (in my case, with Azure Postgres DB).
   : {
     client: 'pg',
     connection: process.env.DATABASE_URL,
