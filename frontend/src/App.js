@@ -18,12 +18,15 @@ const NoMatch = () => <Typography variant='h4'>404 - Not found</Typography>
 function App() {
   const [farms, setFarms] = useState([])
 
-  // At first render, we fetch the list of farms to pass on to other components.
-  useEffect(() => 
+  const fetchFarms = () => 
     fetch('farms')
       .then(res => res.status === 200 ? res.json() : null)
       .then(data => setFarms(data))
       .catch(err => console.log(err))
+
+  // At first render, we fetch the list of farms to pass on to other components.
+  useEffect(() => 
+    fetchFarms()
   , [])
 
   return (
@@ -33,7 +36,7 @@ function App() {
         <div id='route-elements'>
           <Routes>
             <Route path='/' element={Main()} />
-            <Route path='admin' element={<AdminPage />} />
+            <Route path='admin' element={<AdminPage fetchFarms={fetchFarms} />} />
             <Route path='table' element={<DataGrid />} />
             <Route path='graph' element={<FilteredGraph farms={farms} />} />
             <Route path='dashboard' element={<Dashboard farms={farms} />} />

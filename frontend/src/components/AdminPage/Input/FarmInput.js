@@ -6,7 +6,7 @@ import { isValidFarmName } from '../../../utils/Validator'
 
 import './Input.css'
 
-export default function FarmInput() {
+export default function FarmInput({ fetchFarms }) {
   const [farm, setFarm] = useState('')
 
   // This state stores the status of the user's operation.
@@ -26,7 +26,7 @@ export default function FarmInput() {
       // We send the POST request to the backend.
       fetch('farms', settings)
         .then(res =>
-          res.ok
+          res.status === 201
             ? res.json()
             : res.json().then(r =>
               r.error.code === '23505'
@@ -34,11 +34,12 @@ export default function FarmInput() {
                 : setStatus({ active: 2, text: r.error.detail })
             )
           )
-        .then(data =>
-          data && data.status === 'success'
-            ? setStatus({ active: 1, text: farm + ' was added to the database!' })
-            : null
-        )
+        .then(data => {
+          if (data && data.status === 'success') {
+            setStatus({ active: 1, text: farm + ' was added to the database!' })
+            fetchFarms()
+          }
+        })
         .catch(err => setStatus({ active: 2, text: err }))
 
     } else {
