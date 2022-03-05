@@ -34,7 +34,7 @@ function App() {
   }, [])
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div id='app-container'>
       <BrowserRouter>
         <HeaderDrawer />
         <div id='route-elements'>
