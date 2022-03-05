@@ -12,22 +12,26 @@ import './App.css'
 
 const Main = () => <Typography variant='h3' color='orange'>Welcome to the Farms App!</Typography>
 
-// Any non matching routes will show a 404 error.
 const NoMatch = () => <Typography variant='h4'>404 - Not found</Typography>
 
 function App() {
   const [farms, setFarms] = useState([])
 
-  const fetchFarms = () => 
-    fetch('farms')
-      .then(res => res.status === 200 ? res.json() : null)
-      .then(data => setFarms(data))
-      .catch(err => console.log(err))
+  async function fetchFarms(signal?: AbortSignal) {
+    const res = signal ? await fetch('farms', { signal: signal }) : await fetch('farms')
+    
+    const { data, error } = res.status === 200 ? await res.json() : null
 
-  // At first render, we fetch the list of farms to pass on to other components.
-  useEffect(() => 
-    fetchFarms()
-  , [])
+    if (error) { console.log(error) }
+    if (data) { setFarms(data) }
+  }
+
+  useEffect(() => {
+    const abortController = new AbortController()
+    fetchFarms(abortController.signal)
+
+    return () => abortController.abort()    // cleanup
+  }, [])
 
   return (
     <div style={{ display: 'flex' }}>
