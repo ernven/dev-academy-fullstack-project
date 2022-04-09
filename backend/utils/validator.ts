@@ -1,12 +1,16 @@
+import type { row, parameters } from './types'
+
 // Validates that Farm name isn't falsy nor empty/blank.
-export function isValidFarmName(name) {
+export function isValidFarmName(name: string) {
   return (name && !(/^\s*$/).test(name))
 }
 
 // The two following -helper- functions are just for checking date values.
-function areValidDateValues(year, month, day) {
+function areValidDateValues(year: number, month: number, day: number) {
   if (month < 1 || month > 12 || day < 1 || day > 31) { return false }
+
   if ([4,6,9,11].includes(month) && day > 30) { return false }
+
   if (month === 2) {
     // Checking for leap years.
     if ((year % 4 === 0) && (year % 100 !== 0 || year % 400 === 0)) {
@@ -15,15 +19,16 @@ function areValidDateValues(year, month, day) {
       return (day < 29)
     }
   }
+  
   return true
 }
 
-function areValidTimeValues(hour, minutes, seconds) {
+function areValidTimeValues(hour: number, minutes: number, seconds: number) {
   return (hour >= 0 && hour < 24) && (minutes > 0 && minutes < 60) && (seconds > 0 && seconds < 60 )
 }
 
 // This functions, using the previous two, checks the date format plus values.
-function isValidDate(date) {
+function isValidDate(date: string) {
 
   const testRegex = /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}\.?\d{0,3}(Z|([+-]\d{2}:\d{2})?))?$/
 
@@ -54,18 +59,18 @@ function isValidDate(date) {
   return true
 }
 
-// This function checks if an input month, in MM format, is valid.
-export function isValidMonth(month) {
+// The input month checked is in MM format.
+export function isValidMonth(month: string) {
   if (!(/^\d{1,2}$/).test(month)) { return false }
   const parsedMonth = parseInt(month)
   return (parsedMonth > 0 && parsedMonth < 13)
 }
 
-function isValidType(entry_type) {
+function isValidType(entry_type: string | string[]) {
   return (entry_type && (entry_type === 'pH' || entry_type === 'rainFall' || entry_type === 'temperature'))
 }
 
-function isValidValue(entry_type, read_value) {
+function isValidValue(entry_type: string, read_value: string) {
   try {
     const parsedValue = parseFloat(read_value)
     return (
@@ -78,8 +83,8 @@ function isValidValue(entry_type, read_value) {
   }
 }
 
-// Function used to validate request parameters used for filtering.
-export function isValidQuery(params) {
+
+export function isValidQuery(params: parameters) {
   if (params.startDate) {
     if (!isValidDate(params.startDate)) { return false }
   }
@@ -88,7 +93,8 @@ export function isValidQuery(params) {
   }
   if (params.type) {
     if (Object.prototype.toString.call(params.type) === '[object Array]') {
-      params.type.forEach(t => {  
+      // @ts-ignore: It's checked the type is an array, not a string.
+      params.type.forEach((t: string) => {  
         if (!isValidType(t)) { return false }
       })
     } else {
@@ -98,8 +104,7 @@ export function isValidQuery(params) {
   return true
 }
 
-// We check the validity of an entry before inserting into the db.
-export function isValidEntry(entry) {
+export function isValidEntry(entry: row) {
   return (
     // Farm Ids are generated in and fetched only from the db, hence no need to validate.
     isValidDate(entry.date) &&
