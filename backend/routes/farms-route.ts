@@ -1,6 +1,6 @@
 import { Router } from 'express'
 
-import { listFarms, createFarm } from '../controllers/farm-controller.js'
+import { listFarms, handleFarmInsert } from '../controllers/farm-controller.js'
 
 const router = Router()
 
@@ -8,6 +8,6 @@ const router = Router()
 router.get('/', listFarms)
 
 // POST a new farm.
-router.post('/', createFarm)
+router.post('/', handleFarmInsert)
 
 export default router
