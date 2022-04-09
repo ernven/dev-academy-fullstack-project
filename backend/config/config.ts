@@ -1,5 +1,5 @@
 export const appConfig = {
-  port: process.env.PORT
+  port: process.env.PORT || ''
 }
 
 // Setting DB configuration. We can pass an URL String instead of all parameters separately.
@@ -8,14 +8,14 @@ export const dbConfig = process.env.NODE_ENV === 'production' ?
   {
     client: 'pg',
     connection: {
-      connectionString: process.env.DATABASE_URL,
+      connectionString: process.env.DATABASE_URL || '',
       ssl: { rejectUnauthorized: false },
     }
   }
   // Used during development (in my case, with Azure Postgres DB).
   : {
     client: 'pg',
-    connection: process.env.DATABASE_URL,
+    connection: process.env.DATABASE_URL || '',
   }
   
   /* Separately, it would be like this.
