@@ -225,7 +225,7 @@ The backend is pretty good at handling different scenarios already, and more cou
 
 Ultimately, I think the base is very good, and features could be added/taken away easily as the development progresses.
 
-### What's missing
+### What's missing
 
 The main missing feature which I did not have enough time to implement was automated testing. 
 
