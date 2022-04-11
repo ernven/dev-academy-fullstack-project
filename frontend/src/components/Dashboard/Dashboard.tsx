@@ -42,7 +42,7 @@ export default function Dashboard({ farms }: { farms: Farm[] }) {
     : null
 
   const buildCards = () => 
-    dashboardData.map(e => (<DashboardCard key={Object.keys(e)[1]} data={e} />))
+    dashboardData.map(e => (<DashboardCard key={Object.keys(e)[0]} data={e} />))
 
   return (
     <div id='container'>
