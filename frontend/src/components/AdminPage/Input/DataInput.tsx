@@ -1,20 +1,18 @@
-import { useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { Typography, Button, Input } from '@mui/material'
 
 import './Input.css'
 
 export default function DataInput() {
-  const [file, setFile] = useState(null)
+  const [file, setFile] = useState<File | null>(null)
   const [fileSelected, setFileSelected] = useState(false)
 
-  // This state stores the status of the user's operation.
-  // in the active field, 0 means n/a, 1 is success, 2 is error. Text field is for details.
+  // The status property set to 0 means n/a, 1 is success, 2 is error. Text field is for details.
   const [status, setStatus] = useState({ active: 0, text: '' })
 
   const submitData = () => {
 
-    // check file extension here
-    if (file.type === 'text/csv') {
+    if (file?.type === 'text/csv') {
       const data = new FormData()
       data.append('file', file)
 
@@ -23,7 +21,6 @@ export default function DataInput() {
         body: data
       }
 
-      // We send the POST request to the backend.
       fetch('data', settings)
         .then(res => res.status === 201 ? res.json() : res.json().then(r => setStatus({ active: 2, text: r.error.detail })))
         .then(data => data ? setStatus({ active: 1, text: 'Data was added to the database!' }) : null)
@@ -37,10 +34,12 @@ export default function DataInput() {
     setFileSelected(false)
   }
 
-  const handleFileAdd = t => {
-    setFile(t.files[0])
-    setFileSelected(true)
-    setStatus({ active: 0, text: '' })
+  const handleFileAdd = (t: EventTarget & HTMLInputElement) => {
+    if (t.files) {
+      setFile(t.files[0])
+      setFileSelected(true)
+      setStatus({ active: 0, text: '' })
+    }
   }
 
   const displayFileSize = () => {
@@ -50,27 +49,32 @@ export default function DataInput() {
       return <Typography color='red' >{status.text}</Typography>
     }
     if (fileSelected) {
+      // @ts-ignore - We know the file won't be undefined in this scenario.
       return <Typography id='file-size-msg' >{Math.round(file.size / 1024.00) + ' KB'}</Typography>
     }
+    return null
   }
 
   return (
     <div className='form-container'>
+      
+      <div id='file-input'>
         <Input
-          id='file-input'
           disableUnderline={true}
           fullWidth
           type='file'
-          onChange={e => handleFileAdd(e.target)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => handleFileAdd(e.target)}
         />
         {displayFileSize()}
-        <Button
-          className='submit-button'
-          disabled={!fileSelected}
-          onClick={submitData}
-        >
-          Add Data
-        </Button>
       </div>
+
+      <Button
+        className='submit-button'
+        disabled={!fileSelected}
+        onClick={submitData}
+      >
+        Add Data
+      </Button>
+    </div>
   )
 }

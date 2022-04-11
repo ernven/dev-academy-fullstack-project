@@ -3,9 +3,13 @@ import { Typography } from '@mui/material'
 import DataInput from './Input/DataInput'
 import FarmInput from './Input/FarmInput'
 
-export default function Admin({ fetchFarms }) {
+interface propsType {
+  fetchFarms: () => void
+}
+
+export default function Admin({ fetchFarms }: propsType) {
   return (
-    <div style={{marginLeft: '20vw'}}>
+    <div>
       <Typography variant='h2' color='orange' >
         Admin features
       </Typography>

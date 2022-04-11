@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "rootDir": "./",
+    "outDir": "./dist",                 // path to output directory
+
+    "allowJs": true,                    // allow a partial TypeScript and JavaScript codebase
+    "strict": true,                     // enables all strict options
+    "allowUnreachableCode": false,      // raise compiler errors about unreachable code
+    "exactOptionalPropertyTypes": true, // apply strict rules on optional property handling
+    "noFallthroughCasesInSwitch": true, // report errors for fallthrough cases in switch statements
+    "noImplicitReturns": true,          // check all code paths in a function to ensure they return a value
+    "noUnusedParameters": true,         // report errors on unused parameters in functions
+
+    "lib": ["es2021"],
+    "module": "es2022",                 // specify module code generation
+    "moduleResolution": "Node",         // specify module resolution startegy
+    "target": "es2021",                 // specify ECMAScript target version
+    "esModuleInterop": true             // allow import of CommonJS modules in compliance with es6 spec
+  },
+  "exclude": ["node_modules", "build"]
+}

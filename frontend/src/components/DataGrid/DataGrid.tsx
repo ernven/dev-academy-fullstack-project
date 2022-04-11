@@ -10,12 +10,18 @@ import './DataGrid.css'
 export default function DataGrid() {
   const [farmsData, setFarmsData] = useState([])
 
-  useEffect(() => 
-    fetch('data')
+  const fetchData = (signal: AbortSignal) =>
+    fetch('data', { signal: signal })
       .then(res => res.status === 200 ? res.json() : null)
       .then(data => setFarmsData(data))
       .catch(err => console.log(err))
-  , [])
+
+  useEffect(() => {
+    const abortController = new AbortController()
+    fetchData(abortController.signal)
+
+    return () => abortController.abort()    // cleanup
+  }, [])
 
   // Defining the data and columns, memoized to prevent unnecessary updates.
   const tableData = useMemo(() => farmsData, [farmsData])
@@ -25,10 +31,10 @@ export default function DataGrid() {
       headerName: 'Farm Name', field: 'farm_name', filter: true, floatingFilter: true, flex: 1.5
     },
     {
-      headerName: 'Date', field: 'date', valueFormatter: row => (new Date(row.value)).toLocaleString(), flex: 1.5
+      headerName: 'Date', field: 'date', valueFormatter: (row: {value: string}) => (new Date(row.value)).toLocaleString(), flex: 1.5
     },
     {
-      headerName: 'Type', field: 'entry_type', valueFormatter: row => row.value === 'rainFall' ? 'rainfall' : row.value,
+      headerName: 'Type', field: 'entry_type', valueFormatter: (row: {value: string}) => row.value === 'rainFall' ? 'rainfall' : row.value,
       filter: true, floatingFilter: true, flex: 1
     },
     {
@@ -41,17 +47,18 @@ export default function DataGrid() {
     cellStyle: {textAlign: 'center'}
   }), [])
 
-  const modules = useMemo(() => [ClientSideRowModelModule], [])
+  const modules = [ClientSideRowModelModule];
 
   return (
-  <div style={{height: '80vh', width: '78vw'}}>
+  <div id='container'>
     <AgGridReact
       className='ag-theme-material'
-      animateRows='true'
-      modules={modules}
+      animateRows={true}
+      rowData={tableData}
       columnDefs={columnDefs}
       defaultColDef={defaultColDef}
-      rowData={tableData}>
+      modules={modules}
+    >
     </AgGridReact>
   </div>
   )

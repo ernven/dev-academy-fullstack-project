@@ -1,6 +1,6 @@
 import express from 'express'
-// In DEPLOYMENT, we need to import the path module (uncomment next line).
-// import * as path from 'path'
+// In DEPLOYMENT, we need to import the path module.
+import * as path from 'path'
 
 import farms from './routes/farms-route.js'
 import data from './routes/data-route.js'

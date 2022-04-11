@@ -9,28 +9,32 @@ import AdminPage from './components/AdminPage/AdminPage'
 import Dashboard from './components/Dashboard/Dashboard'
 
 import './App.css'
+import type { Farm } from './utils/Types'
 
 const Main = () => <Typography variant='h3' color='orange'>Welcome to the Farms App!</Typography>
 
-// Any non matching routes will show a 404 error.
 const NoMatch = () => <Typography variant='h4'>404 - Not found</Typography>
 
 function App() {
-  const [farms, setFarms] = useState([])
+  const [farms, setFarms] = useState<Farm[]>([])
 
-  const fetchFarms = () => 
-    fetch('farms')
-      .then(res => res.status === 200 ? res.json() : null)
-      .then(data => setFarms(data))
-      .catch(err => console.log(err))
+  async function fetchFarms(signal?: AbortSignal) {
+    const res = signal ? await fetch('farms', { signal: signal }) : await fetch('farms')
+    
+    const bodyParsed =  await res.json()
 
-  // At first render, we fetch the list of farms to pass on to other components.
-  useEffect(() => 
-    fetchFarms()
-  , [])
+    res.status === 200 ? setFarms(bodyParsed) : console.log(bodyParsed)
+  }
+
+  useEffect(() => {
+    const abortController = new AbortController()
+    fetchFarms(abortController.signal)
+
+    return () => abortController.abort()    // cleanup
+  }, [])
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div id='app-container'>
       <BrowserRouter>
         <HeaderDrawer />
         <div id='route-elements'>

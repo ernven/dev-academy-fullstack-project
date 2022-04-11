@@ -1,7 +1,12 @@
 import { Card, CardContent, Typography } from '@mui/material'
+import { DashboardData } from '../../utils/Types'
 
-export default function DashboardCard({ data }) {
-  const key = Object.keys(data)[1]
+type CardData = {
+  data: DashboardData
+}
+
+export default function DashboardCard({ data }: CardData) {
+  const key = Object.keys(data)[0]
 
   return (
     <Card sx={{width: '14em', height: '13em', margin: '1.5%', borderRadius: '1.2em', backgroundColor: 'tan'}}>

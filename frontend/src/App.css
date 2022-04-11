@@ -2,6 +2,10 @@
   display: flex;
 }
 
+#app-container {
+  display: 'flex';
+}
+
 #route-elements {
-  margin: 15vh 0 0 6vw;
+  margin: 10% 0 0 12%;
 }

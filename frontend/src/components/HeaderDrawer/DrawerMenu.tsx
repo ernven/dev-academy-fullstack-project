@@ -9,10 +9,12 @@ import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
 import TableRowsIcon from '@mui/icons-material/TableRows'
 import ShowChartIcon from '@mui/icons-material/ShowChart'
 import DashboardIcon from '@mui/icons-material/Dashboard'
+import type { HeaderPropTypes } from '../../utils/Types'
+import type { Theme } from '@mui/material'
 
 const drawerWidth = 240
 
-const openedMixin = (theme) => ({
+const openedMixin = (theme: Theme) => ({
   width: drawerWidth,
   transition: theme.transitions.create('width', {
     easing: theme.transitions.easing.sharp,
@@ -21,7 +23,7 @@ const openedMixin = (theme) => ({
   overflowX: 'hidden',
 })
 
-const closedMixin = (theme) => ({
+const closedMixin = (theme: Theme) => ({
   transition: theme.transitions.create('width', {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
@@ -43,6 +45,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }))
 
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
+  // @ts-ignore - MUI components can be tricky with types, but should work.
   ({ theme, open }) => ({
     width: drawerWidth,
     flexShrink: 0,
@@ -59,7 +62,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 )
 
-export default function DrawerMenu({ open, handleDrawerClose }) {
+export default function DrawerMenu({ open, handleDrawerClose }: HeaderPropTypes) {
   const theme = useTheme()
   const navigate = useNavigate()
 
