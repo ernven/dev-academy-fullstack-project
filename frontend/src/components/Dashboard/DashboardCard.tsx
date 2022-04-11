@@ -1,6 +1,11 @@
 import { Card, CardContent, Typography } from '@mui/material'
+import { DashboardData } from '../../utils/Types'
 
-export default function DashboardCard({ data }) {
+type CardData = {
+  data: DashboardData
+}
+
+export default function DashboardCard({ data }: CardData) {
   const key = Object.keys(data)[1]
 
   return (

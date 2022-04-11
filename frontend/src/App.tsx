@@ -9,13 +9,14 @@ import AdminPage from './components/AdminPage/AdminPage'
 import Dashboard from './components/Dashboard/Dashboard'
 
 import './App.css'
+import type { Farm } from './utils/Types'
 
 const Main = () => <Typography variant='h3' color='orange'>Welcome to the Farms App!</Typography>
 
 const NoMatch = () => <Typography variant='h4'>404 - Not found</Typography>
 
 function App() {
-  const [farms, setFarms] = useState([])
+  const [farms, setFarms] = useState<Farm[]>([])
 
   async function fetchFarms(signal?: AbortSignal) {
     const res = signal ? await fetch('farms', { signal: signal }) : await fetch('farms')

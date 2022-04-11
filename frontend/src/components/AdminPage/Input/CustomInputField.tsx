@@ -1,7 +1,16 @@
 import { TextField } from '@mui/material'
 
+interface propsType {
+  farm: string
+  status: {
+    active: number,
+    text: string
+  }
+  handleInputChange: (value: string) => void
+}
+
 // This component builds an input field which can display feedback to the user according to the status.
-export default function CustomInputField({ farm, status, handleInputChange }) {
+export default function CustomInputField({ farm, status, handleInputChange }: propsType) {
   if (!status.active) {
     return (
       <TextField

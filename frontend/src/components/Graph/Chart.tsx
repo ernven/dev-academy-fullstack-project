@@ -1,9 +1,15 @@
 import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Line } from 'recharts'
+import type { Farm } from '../../utils/Types'
 
-export default function Chart({ farms, chartData }) {
+interface PropTypes {
+  farms: Farm[],
+  chartData: any[]
+}
+
+export default function Chart({ farms, chartData }: PropTypes) {
 
   // This could be used to build lines in the future.
-  const buildLines = farms => farms ?
+  const buildLines = (farms: Farm[]) => farms ?
     farms.map(farm => 
       <Line
         key={farm.farm_name}
