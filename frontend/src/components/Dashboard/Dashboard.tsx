@@ -3,39 +3,44 @@ import { useState } from 'react'
 import { FormControl, InputLabel, Select, MenuItem, Typography } from '@mui/material'
 
 import DashboardCard from './DashboardCard'
+import type { Farm, ComputedDataItem, DashboardData } from '../../utils/Types'
 
 import './Dashboard.css'
 
-export default function Dashboard({ farms }) {
-  const [dashboardData, setDashboardData] = useState([])
+export default function Dashboard({ farms }: { farms: Farm[] }) {
+  const [dashboardData, setDashboardData] = useState<DashboardData[]>([])
   const [selected, setSelected] = useState('')
 
-  // Fetching the data and formatting for the dashboard
-  const getFarmData = async name => {
-    let toInsert = []
+  const populateDashboardData = async (name: string) => {
 
-    // Since we're sending requests to two endpoints, we need to chain them.
     const averages = await fetch('data/averages?name=' + name).then(res => res.status === 200 ? res.json() : [])
-
-    averages.forEach(i => toInsert.push({name: i.farm_name, [i.entry_type]: {average: i.average_value}}))
 
     const extremes = await fetch('data/extremes?name=' + name).then(res => res.status === 200 ? res.json() : [])
 
-    for (let i = 0; i < extremes.length; i++) {
-      const obj = toInsert[i][extremes[i].entry_type]
-      toInsert[i][extremes[i].entry_type] = {...obj, min: extremes[i].min_value, max: extremes[i].max_value}
-    }
+    const data = formatData(averages, extremes)
 
-    setDashboardData(toInsert)
+    setDashboardData(data)
     setSelected(name)
   }
 
-  // This function builds a lit of menu items containing the farms's names.
+  const formatData = (averages: ComputedDataItem[], extremes: ComputedDataItem[]) => {
+    let formattedData: DashboardData[] = []
+
+    averages.forEach(i => formattedData.push({ [i.entry_type]: { average: i.average_value } }))
+
+    for (let i = 0; i < extremes.length; i++) {
+      const obj = formattedData[i][extremes[i].entry_type]
+
+      formattedData[i][extremes[i].entry_type] = {...obj, min: extremes[i].min_value, max: extremes[i].max_value}
+    }
+
+    return formattedData
+  }
+
   const buildList = () => farms ?
     farms.map(farm => (<MenuItem key={farm.farm_name} value={farm.farm_name} >{farm.farm_name}</MenuItem>))
     : null
 
-  // This function builds the cards to be displayed on the dashboard.
   const buildCards = () => 
     dashboardData.map(e => (<DashboardCard key={Object.keys(e)[1]} data={e} />))
 
@@ -47,7 +52,7 @@ export default function Dashboard({ farms }) {
           labelId='farms-label'
           label='Farm'
           value={selected}
-          onChange={e => getFarmData(e.target.value)}
+          onChange={e => populateDashboardData(e.target.value)}
         >
           {buildList()}
         </Select>
