@@ -1,3 +1,8 @@
 .ag-header-cell-label {
   justify-content: center;
 }
+
+#container {
+  height: 75vh;
+  width: 80%;
+}
