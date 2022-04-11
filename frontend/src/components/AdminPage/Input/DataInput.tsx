@@ -57,21 +57,24 @@ export default function DataInput() {
 
   return (
     <div className='form-container'>
+      
+      <div id='file-input'>
         <Input
-          id='file-input'
           disableUnderline={true}
           fullWidth
           type='file'
           onChange={(e: ChangeEvent<HTMLInputElement>) => handleFileAdd(e.target)}
         />
         {displayFileSize()}
-        <Button
-          className='submit-button'
-          disabled={!fileSelected}
-          onClick={submitData}
-        >
-          Add Data
-        </Button>
       </div>
+
+      <Button
+        className='submit-button'
+        disabled={!fileSelected}
+        onClick={submitData}
+      >
+        Add Data
+      </Button>
+    </div>
   )
 }
