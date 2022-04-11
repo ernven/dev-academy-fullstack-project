@@ -21,10 +21,9 @@ function App() {
   async function fetchFarms(signal?: AbortSignal) {
     const res = signal ? await fetch('farms', { signal: signal }) : await fetch('farms')
     
-    const { data, error } = res.status === 200 ? await res.json() : null
+    const bodyParsed =  await res.json()
 
-    if (error) { console.log(error) }
-    if (data) { setFarms(data) }
+    res.status === 200 ? setFarms(bodyParsed) : console.log(bodyParsed)
   }
 
   useEffect(() => {

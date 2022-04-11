@@ -20,16 +20,11 @@ export default function FilteredGraph({ farms }: { farms: Farm[] }) {
   // (during this process we use an endpoint which returns only what we need, minimizing load and improving performance)
   useEffect(() => {
     const fetchData = async () => {
-      const { data, error } = await fetch(apiUrl + selected).then(res => res.status === 200 ? res.json() : null)
+      const res = await fetch(apiUrl + selected)
 
-      if (error) {
-        console.log(error)
-        return
-      }
+      const bodyParsed =  await res.json()
 
-      if (data) {
-        handleData(data)
-      }
+      res.status === 200 ? handleData(bodyParsed) : console.log(bodyParsed)
     }
 
     if (selected) {
